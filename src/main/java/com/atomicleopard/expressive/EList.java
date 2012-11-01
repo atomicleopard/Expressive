@@ -21,16 +21,16 @@
 package com.atomicleopard.expressive;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * <p>
- * {@link EList} is an extension of the Java Collections {@link List} interface
- * designed to allow for easy use and manipulation.
+ * {@link EList} is an extension of the Java Collections {@link List} interface designed to allow for easy use and manipulation.
  * </p>
  * <p>
- * It implements convenience methods, and defines new methods analagous to the
- * Java Collections operations to support a fluid, or chainable, interface.
+ * It implements convenience methods, and defines new methods analagous to the Java Collections operations to support a fluid, or chainable, interface.
  * </p>
  * <p>
  * Convenience methods defined by {@link EList}:
@@ -42,8 +42,7 @@ import java.util.List;
  * </ul>
  * </p>
  * <p>
- * Methods that redefine standard {@link Collection} and {@link List} methods to
- * support method call chaining:
+ * Methods that redefine standard {@link Collection} and {@link List} methods to support method call chaining:
  * <ul>
  * <li>{@link #addItems(Object...)}</li>
  * <li>{@link #addItems(Collection...)}</li>
@@ -100,8 +99,7 @@ public interface EList<T> extends List<T> {
 	 *            element(s) to be added to this list
 	 * @return this list for method chaining
 	 * @throws IndexOutOfBoundsException
-	 *             if the index is out of range (
-	 *             <tt>index &lt; 0 || index &gt; size()</tt>)
+	 *             if the index is out of range ( <tt>index &lt; 0 || index &gt; size()</tt>)
 	 */
 	public EList<T> insertItems(int index, T... values);
 
@@ -119,10 +117,9 @@ public interface EList<T> extends List<T> {
 	 *            collections containing the element(s) to be added to this list
 	 * @return this list for method chaining
 	 * @throws IndexOutOfBoundsException
-	 *             if the index is out of range (
-	 *             <tt>index &lt; 0 || index &gt; size()</tt>)
+	 *             if the index is out of range ( <tt>index &lt; 0 || index &gt; size()</tt>)
 	 */
-	public EList<T> insertItems(int index, Collection<? extends T>... values);
+	public EList<T> insertItems(int index, Collection<? extends T> values);
 
 	/**
 	 * Appends all of the specified elements onto the end of this list. The new
@@ -137,19 +134,17 @@ public interface EList<T> extends List<T> {
 
 	/**
 	 * <p>
-	 * Appends all of the elements in the specific collections onto the end of
-	 * this list.
+	 * Appends all of the elements in the specific collections onto the end of this list.
 	 * </p>
 	 * <p>
-	 * The new elements will appear in this list in the order that the
-	 * collections they reside in specify.
+	 * The new elements will appear in this list in the order that the collections they reside in specify.
 	 * </p>
 	 * 
 	 * @param values
 	 *            element(s) to be appended to this list
 	 * @return this list for method chaining
 	 */
-	public EList<T> addItems(Collection<? extends T>... collection);
+	public EList<T> addItems(Collection<? extends T> collection);
 
 	/**
 	 * Removes from this list all of the specified elements.
@@ -168,7 +163,7 @@ public interface EList<T> extends List<T> {
 	 *            list
 	 * @return this list for method chaining
 	 */
-	public EList<T> removeItems(Collection<? extends T>... values);
+	public EList<T> removeItems(Collection<? extends T> values);
 
 	/**
 	 * Retains only the elements in this list that are specified.
@@ -187,7 +182,7 @@ public interface EList<T> extends List<T> {
 	 * @return this list for method chaining
 	 * @see List#retainAll(Collection)
 	 */
-	public EList<T> retainItems(Collection<? extends T>... values);
+	public EList<T> retainItems(Collection<? extends T> values);
 
 	/**
 	 * Creates a copy of this {@link EList} containing the same elements.
@@ -203,4 +198,36 @@ public interface EList<T> extends List<T> {
 	 * @see List#subList(int, int)
 	 */
 	public EList<T> subList(int fromIndex, int toIndex);
+
+	/**
+	 * Returns a list of the items from the given index for the given size. If the index + size is out of bounds, the returned list will be shorter
+	 * than the specified size, including only existing elements. If size if negative, an empty list is returned.
+	 * If the given index is negative, the returned list will contain results as though it wasn't. Any 'negative' elements will be omitted, but the resulting
+	 * size will match them as though they exists.
+	 * 
+	 * e.g. The following test snippet would pass
+	 * 
+	 * <pre>
+	 * <code>
+	 * EList&lt;String&gt; list = Expressive.list("A","B","C");
+	 * EList&lt;String&gt; items = list.getItems(-2,3);
+	 * assertThat(items.size(), is(1));
+	 * assertThat(items, is(list("A")));
+	 * </code>
+	 * </pre>
+	 * 
+	 * @param index
+	 * @param size
+	 * @return a list of 'size' items starting from the given index, or as many as can be provided based on the list contents.
+	 */
+	public EList<T> getItems(int index, int size);
+
+	/**
+	 * Sorts this {@link EList} in place using the given comparator.
+	 * 
+	 * @param comparator
+	 * @return this list
+	 * @see Collections#sort(List)
+	 */
+	public EList<T> sort(Comparator<T> comparator);
 }

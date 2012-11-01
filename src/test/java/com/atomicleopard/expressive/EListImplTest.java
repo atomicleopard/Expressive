@@ -20,12 +20,14 @@
  */
 package com.atomicleopard.expressive;
 
+import static com.atomicleopard.expressive.Expressive.list;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -163,25 +165,22 @@ public class EListImplTest {
 		assertThat(list, is(Arrays.asList(BigDecimal.valueOf(111), BigDecimal.valueOf(222), BigDecimal.valueOf(333), BigDecimal.valueOf(444))));
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
-	public void shouldAddItemsUsingVarArgCollections() {
+	public void shouldAddItemsUsingCollections() {
 		List<Integer> list1 = Arrays.asList(1, 2, 3);
 		List<Integer> list2 = Arrays.asList(4, 5, 6);
-		List<Integer> list3 = Arrays.asList(7, 8, 9);
 
 		EListImpl<Integer> list = new EListImpl<Integer>();
 		assertThat(list.size(), is(0));
 		list.addItems(list1);
 		assertThat(list, is(Arrays.asList(1, 2, 3)));
 
-		list.addItems(list2, list3);
-		assertThat(list, is(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9)));
+		list.addItems(list2);
+		assertThat(list, is(Arrays.asList(1, 2, 3, 4, 5, 6)));
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
-	public void shouldAddItemsUsingVarArgCollectionsWithoutNPEOnNullCollections() {
+	public void shouldAddItemsUsingCollectionsWithoutNPEOnNullCollections() {
 		List<Integer> list1 = Arrays.asList(1, 2, 3);
 		List<Integer> list2 = null;
 		List<Integer> list3 = Arrays.asList(7, 8, 9);
@@ -191,7 +190,10 @@ public class EListImplTest {
 		list.addItems(list1);
 		assertThat(list, is(Arrays.asList(1, 2, 3)));
 
-		list.addItems(list2, list3);
+		list.addItems(list2);
+		assertThat(list, is(Arrays.asList(1, 2, 3)));
+
+		list.addItems(list3);
 		assertThat(list, is(Arrays.asList(1, 2, 3, 7, 8, 9)));
 	}
 
@@ -208,13 +210,11 @@ public class EListImplTest {
 		assertThat(list, is(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9)));
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
-	public void shouldInsertItemsUsingVarArgCollections() {
+	public void shouldInsertItemsUsingCollection() {
 		List<Integer> list1 = Arrays.asList(4);
 		List<Integer> list2 = Arrays.asList(2, 3);
 		List<Integer> list3 = Arrays.asList(6, 7);
-		List<Integer> list4 = Arrays.asList(8);
 
 		EListImpl<Integer> list = new EListImpl<Integer>(1, 5, 9);
 		list.insertItems(1, list1);
@@ -223,17 +223,28 @@ public class EListImplTest {
 		list.insertItems(1, list2);
 		assertThat(list, is(Arrays.asList(1, 2, 3, 4, 5, 9)));
 
-		list.insertItems(5, list3, list4);
-		assertThat(list, is(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9)));
+		list.insertItems(5, list3);
+		assertThat(list, is(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 9)));
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
-	public void shouldInsertItemsUsingVarArgCollectionsWithoutNPEOnNullCollections() {
+	public void shouldInsertItemsUsingCollectionInsertingAtTheStartIfOutOfBoundsNegatively() {
+		List<Integer> list1 = Arrays.asList(4);
+		List<Integer> list2 = Arrays.asList(2, 3);
+
+		EListImpl<Integer> list = new EListImpl<Integer>(1, 5, 9);
+		list.insertItems(-1, list1);
+		assertThat(list, is(Arrays.asList(4, 1, 5, 9)));
+
+		list.insertItems(-10, list2);
+		assertThat(list, is(Arrays.asList(2, 3, 4, 1, 5, 9)));
+	}
+
+	@Test
+	public void shouldInsertItemsUsingCollectionWithoutNPEOnNullCollections() {
 		List<Integer> list1 = Arrays.asList(4);
 		List<Integer> list2 = null;
 		List<Integer> list3 = Arrays.asList(6, 7);
-		List<Integer> list4 = Arrays.asList(8);
 
 		EListImpl<Integer> list = new EListImpl<Integer>(1, 5, 9);
 		list.insertItems(1, list1);
@@ -242,8 +253,11 @@ public class EListImplTest {
 		list.insertItems(1, list2);
 		assertThat(list, is(Arrays.asList(1, 4, 5, 9)));
 
-		list.insertItems(3, list3, list4);
-		assertThat(list, is(Arrays.asList(1, 4, 5, 6, 7, 8, 9)));
+		list.insertItems(3, list3);
+		assertThat(list, is(Arrays.asList(1, 4, 5, 6, 7, 9)));
+
+		list.insertItems(3, Collections.<Integer> emptyList());
+		assertThat(list, is(Arrays.asList(1, 4, 5, 6, 7, 9)));
 	}
 
 	@Test
@@ -259,31 +273,21 @@ public class EListImplTest {
 		assertThat(list, is(Arrays.asList("D", "E", "F")));
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
-	public void shouldRemoveItemsUsingVarArgCollections() {
+	public void shouldRemoveItemsUsingCollection() {
 		List<String> listA = Arrays.asList("A");
 		List<String> listBC = Arrays.asList("B", "C");
-		List<String> listD = Arrays.asList("D");
 		List<String> listZ = Arrays.asList("Z");
 		EListImpl<String> list = new EListImpl<String>("A", "B", "C", "C", "D", "E", "C", "B", "F");
 		list.removeItems(listA);
 		assertThat(list, is(Arrays.asList("B", "C", "C", "D", "E", "C", "B", "F")));
-		list.removeItems(listBC, listD, listZ);
-		assertThat(list, is(Arrays.asList("E", "F")));
-	}
-
-	@SuppressWarnings("unchecked")
-	@Test
-	public void shouldRemoveItemsUsingVarArgCollectionsWithoutNPEOnNullCollections() {
-		List<String> listA = Arrays.asList("A");
-		List<String> listBC = Arrays.asList("B", "C");
-		List<String> listD = null;
-		List<String> listZ = Arrays.asList("Z");
-		EListImpl<String> list = new EListImpl<String>("A", "B", "C", "C", "D", "E", "C", "B", "F");
-		list.removeItems(listA);
-		assertThat(list, is(Arrays.asList("B", "C", "C", "D", "E", "C", "B", "F")));
-		list.removeItems(listBC, listD, listZ);
+		list.removeItems(listBC);
+		assertThat(list, is(Arrays.asList("D", "E", "F")));
+		list.removeItems(listZ);
+		assertThat(list, is(Arrays.asList("D", "E", "F")));
+		list.removeItems(Collections.<String> emptyList());
+		assertThat(list, is(Arrays.asList("D", "E", "F")));
+		list.removeItems((Collection<String>) null);
 		assertThat(list, is(Arrays.asList("D", "E", "F")));
 	}
 
@@ -300,18 +304,15 @@ public class EListImplTest {
 		assertThat(list, is(Arrays.asList("B", "C", "C", "C", "B")));
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
-	public void shouldRetainItemsUsingVarArgCollections() {
-		List<String> listA = Arrays.asList("A");
+	public void shouldRetainItemsUsingCollection() {
 		List<String> listBC = Arrays.asList("B", "C");
-		List<String> listD = Arrays.asList("D");
 		List<String> listZ = Arrays.asList("Z");
 		EListImpl<String> list = new EListImpl<String>("A", "B", "C", "C", "D", "E", "C", "B", "F");
-		list.retainItems(listA, listBC, listD, listZ);
-		assertThat(list, is(Arrays.asList("A", "B", "C", "C", "D", "C", "B")));
-		list.retainItems(listBC, listZ);
+		list.retainItems(listBC);
 		assertThat(list, is(Arrays.asList("B", "C", "C", "C", "B")));
+		list.retainItems(listZ);
+		assertThat(list, is(Collections.<String> emptyList()));
 	}
 
 	@Test
@@ -458,5 +459,35 @@ public class EListImplTest {
 		when(mockElist.toArray()).thenReturn(new String[] { "Hi", "Test", "Values" });
 		EListImpl<String> list = new EListImpl<String>(mockElist);
 		assertThat(list, hasItems("Hi", "Test", "Values"));
+	}
+
+	@Test
+	public void shouldGetItemsAtIndexForSize() {
+		EListImpl<String> list = new EListImpl<String>("A", "B", "C", "D");
+		assertThat(list.getItems(0, 4), is(list("A", "B", "C", "D")));
+		assertThat(list.getItems(0, 3), is(list("A", "B", "C")));
+		assertThat(list.getItems(1, 4), is(list("B", "C", "D")));
+		assertThat(list.getItems(1, 3), is(list("B", "C", "D")));
+		assertThat(list.getItems(4, 4).isEmpty(), is(true));
+		assertThat(list.getItems(4, 100).isEmpty(), is(true));
+		assertThat(list.getItems(0, 100), is(list("A", "B", "C", "D")));
+
+		assertThat(list.getItems(-1, 2), is(list("A")));
+		assertThat(list.getItems(5, 100).isEmpty(), is(true));
+	}
+
+	@Test
+	public void shouldPassTheExampleTestSnippetFromTheJavadoc() {
+		EList<String> list = Expressive.list("A", "B", "C");
+		EList<String> items = list.getItems(-2, 3);
+		assertThat(items.size(), is(1));
+		assertThat(items, is(list("A")));
+	}
+
+	@Test
+	public void shouldCreateWithDelegateOfGivenInitialCapacity() {
+		EListImpl<String> eListImpl = new EListImpl<String>(10);
+		assertThat(eListImpl, is(notNullValue()));
+
 	}
 }

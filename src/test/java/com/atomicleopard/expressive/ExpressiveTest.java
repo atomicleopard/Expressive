@@ -28,11 +28,18 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.Vector;
+import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -141,6 +148,20 @@ public class ExpressiveTest {
 	}
 
 	@Test
+	public void shouldCreateAListFromAnIterable() {
+		Iterable<String> iterable = Arrays.asList("A", "B", "C");
+		EList<String> elist = list(iterable);
+		assertThat(elist, hasItems("A", "B", "C"));
+	}
+
+	@Test
+	public void shouldCreateAListFromAnIterator() {
+		Iterator<String> iterator = Arrays.asList("A", "B", "C").iterator();
+		EList<String> elist = list(iterator);
+		assertThat(elist, hasItems("A", "B", "C"));
+	}
+
+	@Test
 	public void shouldBeEasyToUse() {
 		EList<String> elist = list("A", "B", "C", "D");
 		elist.insertItems(1, "E", "F").removeItems("A").addItems("Z");
@@ -155,7 +176,7 @@ public class ExpressiveTest {
 
 	@Test
 	public void shouldCreateAnArrayWithNoArguments() {
-		String[] result = Expressive.<String>array();
+		String[] result = Expressive.<String> array();
 		assertThat(result.length, is(0));
 	}
 
@@ -230,6 +251,70 @@ public class ExpressiveTest {
 	public void shouldExcerciseTheConstructorSoIDontKeepCheckingCoverageReports() {
 		Expressive e = new Expressive();
 		assertThat(e, is(notNullValue()));
+	}
+
+	@Test
+	public void shouldReverseTheGivenMap() {
+		Map<String, Integer> map = mapKeys("1", "2", "3").to(1, 2, 3);
+		Map<Integer, Set<String>> reverse = reverse(map);
+		assertThat(reverse.size(), is(3));
+		assertThat(reverse.get(1), is(set("1")));
+		assertThat(reverse.get(2), is(set("2")));
+		assertThat(reverse.get(3), is(set("3")));
+	}
+
+	@Test
+	public void shouldReverseTheGivenMapRetainingMultipleKeys() {
+		Map<String, Integer> map = mapKeys("1", "2", "3").to(1, 1, 1);
+		Map<Integer, Set<String>> reverse = reverse(map);
+		assertThat(reverse.size(), is(1));
+		assertThat(reverse.get(1), is(set("1", "2", "3")));
+	}
+
+	@Test
+	public void shouldReverseUniqueTheGivenMap() {
+		Map<String, Integer> map = mapKeys("1", "2", "3").to(1, 2, 3);
+		Map<Integer, String> reverse = reverseUnique(map);
+		assertThat(reverse.size(), is(3));
+		assertThat(reverse.get(1), is("1"));
+		assertThat(reverse.get(2), is("2"));
+		assertThat(reverse.get(3), is("3"));
+	}
+
+	@Test
+	public void shouldReverseUniqueTheGivenMapRetainingTheFirstValue() {
+		Map<String, Integer> map = new LinkedHashMap<String, Integer>();
+		map.put("1", 1);
+		map.put("2", 1);
+		map.put("3", 1);
+		Map<Integer, String> reverse = reverseUnique(map);
+		assertThat(reverse.size(), is(1));
+		assertThat(reverse.get(1), is("1"));
+	}
+
+	@Test
+	public void shouldReverseNullToAnEmptyMap() {
+		assertThat(reverse((Map<Integer, String>) null), is(Collections.<String, Set<Integer>> emptyMap()));
+		assertThat(reverseUnique((Map<Integer, String>) null), is(Collections.<String, Integer> emptyMap()));
+	}
+
+	@Test
+	public void shouldReverseTheGivenMapAttemptingToRetainImplmentationType() {
+		assertThat(reverse(new LinkedHashMap<String, Integer>()), is(LinkedHashMap.class));
+		assertThat(reverse(new TreeMap<String, Integer>()), is(TreeMap.class));
+		assertThat(reverse(new WeakHashMap<String, Integer>()), is(WeakHashMap.class));
+		assertThat(reverse(new ConcurrentHashMap<String, Integer>()), is(ConcurrentHashMap.class));
+		assertThat(reverse(new IdentityHashMap<String, Integer>()), is(IdentityHashMap.class));
+		assertThat(reverse(new Properties()), is(HashMap.class));
+		assertThat(reverse(new HashMap<String, Integer>()), is(HashMap.class));
+
+		assertThat(reverseUnique(new LinkedHashMap<String, Integer>()), is(LinkedHashMap.class));
+		assertThat(reverseUnique(new TreeMap<String, Integer>()), is(TreeMap.class));
+		assertThat(reverseUnique(new WeakHashMap<String, Integer>()), is(WeakHashMap.class));
+		assertThat(reverseUnique(new ConcurrentHashMap<String, Integer>()), is(ConcurrentHashMap.class));
+		assertThat(reverseUnique(new IdentityHashMap<String, Integer>()), is(IdentityHashMap.class));
+		assertThat(reverseUnique(new Properties()), is(HashMap.class));
+		assertThat(reverseUnique(new HashMap<String, Integer>()), is(HashMap.class));
 	}
 
 	/*

@@ -1,6 +1,6 @@
 package com.atomicleopard.expressive.filter;
 
-import static com.atomicleopard.expressive.Expressive.*;
+import static com.atomicleopard.expressive.Expressive.list;
 
 import java.util.Collection;
 

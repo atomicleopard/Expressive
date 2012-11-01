@@ -20,7 +20,7 @@
  */
 package com.atomicleopard.selector;
 
-import static com.atomicleopard.expressive.Cast.*;
+import static com.atomicleopard.expressive.Cast.as;
 
 import java.lang.reflect.Method;
 import java.util.Collection;

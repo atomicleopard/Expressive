@@ -1,7 +1,7 @@
 package com.atomicleopard.expressive.collection;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 import java.util.Date;

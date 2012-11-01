@@ -1,8 +1,8 @@
 package com.atomicleopard.expressive.filter;
 
-import static com.atomicleopard.expressive.Expressive.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static com.atomicleopard.expressive.Expressive.list;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.util.Collections;
 
@@ -36,12 +36,20 @@ public class EFiltersTest {
 		assertThat(EFilters.filter(original, EPredicates.<String> all()), is(original));
 		assertThat(EFilters.filter(original, EPredicates.<String> none()), is(Collections.<String> emptyList()));
 	}
-	
+
 	@Test
 	public void shouldSplitListUsingFilter() {
 		EList<String> original = list("This", "is", null, "", null, "stuff");
-		Pair<EList<String>, EList<String>> split = EFilters.split(original, EFilters.retain(EPredicates.<String>notNull()));
+		Pair<EList<String>, EList<String>> split = EFilters.split(original, EFilters.retain(EPredicates.<String> notNull()));
 		assertThat(split.getA(), is(list("This", "is", "", "stuff")));
-		assertThat(split.getB(), is(Expressive.<String>list(null, null)));
+		assertThat(split.getB(), is(Expressive.<String> list(null, null)));
+	}
+
+	@Test
+	public void shouldSplitListUsingPredicate() {
+		EList<String> original = list("This", "is", null, "", null, "stuff");
+		Pair<EList<String>, EList<String>> split = EFilters.split(original, EPredicates.<String> notNull());
+		assertThat(split.getA(), is(list("This", "is", "", "stuff")));
+		assertThat(split.getB(), is(Expressive.<String> list(null, null)));
 	}
 }

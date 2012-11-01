@@ -20,8 +20,7 @@
  */
 package com.atomicleopard.expressive;
 
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;

@@ -1,8 +1,8 @@
 package com.atomicleopard.expressive.filter;
 
-import static com.atomicleopard.expressive.Expressive.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static com.atomicleopard.expressive.Expressive.list;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 

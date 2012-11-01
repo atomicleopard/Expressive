@@ -21,8 +21,7 @@
 package com.atomicleopard.expressive;
 
 import static com.atomicleopard.expressive.Cast.as;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;

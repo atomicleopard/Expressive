@@ -40,9 +40,9 @@ import java.util.ListIterator;
 public class EListImpl<T> implements EList<T> {
 	protected List<T> delegate;
 
-	protected EListImpl(int size) {
+	protected EListImpl(int initialCapacity) {
 		super();
-		this.delegate = new ArrayList<T>(size);
+		this.delegate = new ArrayList<T>(initialCapacity);
 	}
 
 	public EListImpl() {
@@ -89,11 +89,9 @@ public class EListImpl<T> implements EList<T> {
 	}
 
 	@Override
-	public EList<T> addItems(Collection<? extends T>... values) {
-		for (Collection<? extends T> collection : values) {
-			if (collection != null) {
-				delegate.addAll(collection);
-			}
+	public EList<T> addItems(Collection<? extends T> values) {
+		if (values != null) {
+			delegate.addAll(values);
 		}
 		return this;
 	}
@@ -109,15 +107,10 @@ public class EListImpl<T> implements EList<T> {
 	}
 
 	@Override
-	public EList<T> insertItems(int index, Collection<? extends T>... value) {
-		// TODO - Expressive - Currently this throws array index out of bounds
-		// when index is out of range,
-		// but is that stupid, maybe clamping in the range of 0 to size() - 1
-		// makes more sense.
-		for (int i = value.length - 1; i >= 0; i--) {
-			if (value[i] != null) {
-				delegate.addAll(index, value[i]);
-			}
+	public EList<T> insertItems(int index, Collection<? extends T> value) {
+		if (value != null) {
+			index = Math.max(0, Math.min(index, size()));
+			delegate.addAll(index, value);
 		}
 		return this;
 	}
@@ -131,21 +124,17 @@ public class EListImpl<T> implements EList<T> {
 	}
 
 	@Override
-	public EList<T> removeItems(Collection<? extends T>... values) {
-		for (Collection<? extends T> collection : values) {
-			if (collection != null) {
-				delegate.removeAll(collection);
-			}
+	public EList<T> removeItems(Collection<? extends T> values) {
+		if (values != null) {
+			delegate.removeAll(values);
 		}
 
 		return this;
 	}
 
 	@Override
-	public EList<T> retainItems(Collection<? extends T>... values) {
-		Collection<T> combined = Expressive.flatten(Arrays.asList(values));
-		delegate.retainAll(combined);
-
+	public EList<T> retainItems(Collection<? extends T> values) {
+		delegate.retainAll(values);
 		return this;
 	}
 
@@ -263,6 +252,26 @@ public class EListImpl<T> implements EList<T> {
 		return delegate.toArray(a);
 	}
 
+	@Override
+	public EList<T> getItems(int index, int size) {
+		// fit the start and end indexes within the bound of the list
+		int start = Math.min(Math.max(0, index), size());
+		size = Math.max(0, size);
+		size = index < 0 ? size + index : size;
+		int end = Math.min(delegate.size(), start + size);
+		return new EListImpl<T>(delegate.subList(start, end));
+	}
+
+	/**
+	 * @see Collections#sort(List)
+	 * @param comparator
+	 * @return
+	 */
+	public EList<T> sort(Comparator<T> comparator) {
+		Collections.sort(this.delegate, comparator);
+		return this;
+	}
+
 	public boolean equals(Object o) {
 		if (o == this)
 			return true;
@@ -294,15 +303,4 @@ public class EListImpl<T> implements EList<T> {
 	public String toString() {
 		return delegate.toString();
 	}
-
-	/**
-	 * @see Collections#sort(List)
-	 * @param comparator
-	 * @return
-	 */
-	public EList<T> sort(Comparator<T> comparator) {
-		Collections.sort(this.delegate, comparator);
-		return this;
-	}
-
 }

@@ -25,21 +25,26 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
- * {@link Expressive} is designed to allow coders to write more expressive code,
- * focusing on what they want to do with collections of objects, rather than the
- * mechanics of the manipulation of the Java Collections API.
+ * {@link Expressive} is designed to allow coders to write more expressive code, focusing on what they want to do with collections of objects, rather than the mechanics of the manipulation of the Java
+ * Collections API.
  * </p>
  * <p>
- * In this vein, {@link Expressive} supplies static methods for the easy
- * creation of different collection types, and returns types compatible with the
- * Java Collections API that allow for easier use and manipulation.
+ * In this vein, {@link Expressive} supplies static methods for the easy creation of different collection types, and returns types compatible with the Java Collections API that allow for easier use
+ * and manipulation.
  * </p>
  * 
  * @see EList
@@ -121,16 +126,11 @@ public class Expressive {
 	 * 
 	 * </p>
 	 * <p>
-	 * Due to the nature of mixed type arrays, any object can be used as a key
-	 * or value pair, regardless of whether it matches the key or value generic
-	 * types for the resulting map. Inserting the incorrect type will not result
-	 * in a failure. Care should be taken, or class cast exceptions can occur at
-	 * execution time. For compile time type safery, prefer
-	 * {@link #mapKeys(Object...)}
+	 * Due to the nature of mixed type arrays, any object can be used as a key or value pair, regardless of whether it matches the key or value generic types for the resulting map. Inserting the
+	 * incorrect type will not result in a failure. Care should be taken, or class cast exceptions can occur at execution time. For compile time type safery, prefer {@link #mapKeys(Object...)}
 	 * </p>
 	 * <p>
-	 * If an uneven number of values are supplied, the final key will be omitted
-	 * from the map.
+	 * If an uneven number of values are supplied, the final key will be omitted from the map.
 	 * </p>
 	 * 
 	 * @param values
@@ -150,12 +150,10 @@ public class Expressive {
 
 	/**
 	 * <p>
-	 * Supports a fluid syntax for creating maps conveniently. Unlike
-	 * {@link #map(List)}, also ensures compile time type safety using generics.
+	 * Supports a fluid syntax for creating maps conveniently. Unlike {@link #map(List)}, also ensures compile time type safety using generics.
 	 * </p>
 	 * <p>
-	 * Returns a {@link MapKeys}, which will produce a {@link Map} when the
-	 * {@link MapKeys#to(List)} method is invoked.
+	 * Returns a {@link MapKeys}, which will produce a {@link Map} when the {@link MapKeys#to(List)} method is invoked.
 	 * </p>
 	 * 
 	 * @param <K>
@@ -172,13 +170,10 @@ public class Expressive {
 
 	/**
 	 * <p>
-	 * Supports a fluid syntax for creating maps conveniently. Unlike
-	 * {@link #map(Object...)}, also ensures compile time type safety using
-	 * generics.
+	 * Supports a fluid syntax for creating maps conveniently. Unlike {@link #map(Object...)}, also ensures compile time type safety using generics.
 	 * </p>
 	 * <p>
-	 * Returns a {@link MapKeys}, which will produce a {@link Map} when the
-	 * {@link MapKeys#to(Object...)} method is invoked.
+	 * Returns a {@link MapKeys}, which will produce a {@link Map} when the {@link MapKeys#to(Object...)} method is invoked.
 	 * </p>
 	 * 
 	 * @param <K>
@@ -195,8 +190,7 @@ public class Expressive {
 
 	/**
 	 * <p>
-	 * Convenience method for creating an array containing the concatenated
-	 * contents of the given set of arrays.
+	 * Convenience method for creating an array containing the concatenated contents of the given set of arrays.
 	 * </p>
 	 * 
 	 * @param values
@@ -223,13 +217,10 @@ public class Expressive {
 
 	/**
 	 * <p>
-	 * Flattens the given collections of collections into a single list
-	 * containing all entries.
+	 * Flattens the given collections of collections into a single list containing all entries.
 	 * </p>
 	 * <p>
-	 * This is useful in the scenario where we have grouped or categorised
-	 * collections, such as a map of lists, when we want to search, sort, or
-	 * iterate all entries.
+	 * This is useful in the scenario where we have grouped or categorised collections, such as a map of lists, when we want to search, sort, or iterate all entries.
 	 * </p>
 	 * <p>
 	 * For example:
@@ -246,7 +237,6 @@ public class Expressive {
 	 * @param collectionOfCollection
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> EList<T> flatten(Collection<? extends Collection<? extends T>> collectionOfCollection) {
 		EList<T> eList = new EListImpl<T>();
 		for (Collection<? extends T> collection : collectionOfCollection) {
@@ -259,12 +249,10 @@ public class Expressive {
 
 	/**
 	 * <p>
-	 * Flattens the given varargs of collections into a single list containing
-	 * all entries.
+	 * Flattens the given varargs of collections into a single list containing all entries.
 	 * </p>
 	 * <p>
-	 * This scenario is useful generally in test code where we want to assemble specific sets of collections
-	 * from expected and unexpected values
+	 * This scenario is useful generally in test code where we want to assemble specific sets of collections from expected and unexpected values
 	 * </p>
 	 * <p>
 	 * For example:
@@ -277,6 +265,7 @@ public class Expressive {
 	 * assertThat(vowels, is(expected));
 	 * </code>
 	 * </pre>
+	 * 
 	 * </p>
 	 * 
 	 * @param <T>
@@ -285,7 +274,9 @@ public class Expressive {
 	 */
 	public static <T> EList<T> flatten(Collection<? extends T>... collectionOfCollection) {
 		EList<T> eList = new EListImpl<T>();
-		eList.addItems(collectionOfCollection);
+		for (Collection<? extends T> collection : collectionOfCollection) {
+			eList.addItems(collection);
+		}
 		return eList;
 	}
 
@@ -294,8 +285,7 @@ public class Expressive {
 	 * Convenience method for creating an {@link EList}.
 	 * </p>
 	 * <p>
-	 * This can also be used to create a {@link List} as an alternative to
-	 * {@link Arrays#asList(Object...)}.
+	 * This can also be used to create a {@link List} as an alternative to {@link Arrays#asList(Object...)}.
 	 * </p>
 	 * 
 	 * @param <T>
@@ -309,13 +299,10 @@ public class Expressive {
 
 	/**
 	 * <p>
-	 * Convenience method for creating an {@link EList} from a
-	 * {@link Collection}. The resulting {@link EList} will contain all elements
-	 * from the given {@link Collection}s.
+	 * Convenience method for creating an {@link EList} from a {@link Collection}. The resulting {@link EList} will contain all elements from the given {@link Collection}s.
 	 * </p>
 	 * <p>
-	 * The resulting order of the items is dependent on the order defined by the
-	 * supplied collection.
+	 * The resulting order of the items is dependent on the order defined by the supplied collection.
 	 * </p>
 	 * 
 	 * @param <T>
@@ -323,27 +310,112 @@ public class Expressive {
 	 *            the objects to be placed in a collection
 	 * @return an {@link EList} containing the given items in the given order
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> EList<T> list(Collection<? extends T> values) {
 		return new EListImpl<T>().addItems(values);
 	}
 
 	/**
 	 * <p>
-	 * Convenience method for creating an {@link Iterable} from an
-	 * {@link Iterator} so that it can easily be used in a for each loop.
+	 * Convenience method for creating an {@link EList} from an {@link Iterable}. The resulting {@link EList} will contain all elements available from the {@link Iterator} obtained from the
+	 * {@link Iterable}.
 	 * </p>
 	 * <p>
-	 * Iterators used in this fashion should be discarded, as their state will
-	 * be altered permanently once they are accessed (the for loop is executed).
-	 * <br/>
-	 * Likewise, the resulting Iterable should only have
-	 * {@link Iterable#iterator()} invoked once.
+	 * The resulting order of the items is dependent on the order defined by the {@link Iterator} underlying the {@link Iterable}
+	 * </p>
+	 * 
+	 * @param <T>
+	 * @param values
+	 *            the iterable containing the objects to be placed in a list
+	 * @return an {@link EList} containing the given items in the given order
+	 */
+	public static <T> EList<T> list(Iterable<? extends T> values) {
+		EListImpl<T> list = new EListImpl<T>();
+		for (T t : values) {
+			list.add(t);
+		}
+		return list;
+	}
+
+	/**
+	 * <p>
+	 * Convenience method for creating an {@link EList} from an {@link Iterator}.
 	 * </p>
 	 * <p>
-	 * The Iterator returned from the resulting Iterable is the same as the
-	 * supplied instance, and as such supports {@link Iterator#remove()} if the
-	 * given iterator does.
+	 * The resulting order of the items is dependent on the order of the {@link Iterator}.
+	 * </p>
+	 * <p>
+	 * The given iterator should be considered stale once passed to this method. If {@link Iterator#next()} has already been called on the given iterator, those elements will not be present in the
+	 * resulting list.
+	 * </p>
+	 * 
+	 * @param <T>
+	 * @param values
+	 *            the iterator containing the objects to be placed in a list
+	 * @return an {@link EList} containing the given items in the given order
+	 */
+	public static <T> EList<T> list(Iterator<? extends T> values) {
+		EListImpl<T> list = new EListImpl<T>();
+		while (values.hasNext()) {
+			list.add(values.next());
+		}
+		return list;
+	}
+
+	/**
+	 * Reverses a {@link Map}.
+	 * Returns a new map where the values of the given map are mapped to the set of keys.
+	 * 
+	 * This function is similar to the {@link #reverseUnique(Map)} function, but can handle multiple keys of the input map having a single value.
+	 * 
+	 * @param map
+	 * @return
+	 * @see #reverseUnique(Map)
+	 */
+	public static <K, V> Map<V, Set<K>> reverse(Map<K, V> map) {
+		Map<V, Set<K>> reverse = createMap(map);
+		if (map != null) {
+			for (Map.Entry<K, V> entry : map.entrySet()) {
+				Set<K> set = reverse.get(entry.getValue());
+				if (set == null) {
+					set = new LinkedHashSet<K>();
+					reverse.put(entry.getValue(), set);
+				}
+				set.add(entry.getKey());
+			}
+		}
+		return reverse;
+	}
+
+	/**
+	 * Reverses a {@link Map}, mapping each value in the given map to a single key value.
+	 * If a value may appear more than once, {@link #reverse(Map)} should be used instead.
+	 * 
+	 * @param map
+	 * @return
+	 * @see #reverse(Map)
+	 */
+	public static <K, V> Map<V, K> reverseUnique(Map<K, V> map) {
+		Map<V, K> reverse = createMap(map);
+		if (map != null) {
+			for (Map.Entry<K, V> entry : map.entrySet()) {
+				if (!reverse.containsKey(entry.getValue())) {
+					reverse.put(entry.getValue(), entry.getKey());
+				}
+			}
+		}
+		return reverse;
+	}
+
+	/**
+	 * <p>
+	 * Convenience method for creating an {@link Iterable} from an {@link Iterator} so that it can easily be used in a for each loop.
+	 * </p>
+	 * <p>
+	 * Iterators used in this fashion should be discarded, as their state will be altered permanently once they are accessed (the for loop is executed). <br/>
+	 * Likewise, the resulting Iterable should only have {@link Iterable#iterator()} invoked once.
+	 * </p>
+	 * <p>
+	 * The Iterator returned from the resulting Iterable is the same as the supplied instance, and as such supports {@link Iterator#remove()} if the given iterator does.
 	 * </p>
 	 * <p>
 	 * 
@@ -378,18 +450,14 @@ public class Expressive {
 
 	/**
 	 * <p>
-	 * Convenience method for creating an {@link Iterable} from an
-	 * {@link Enumeration} so that it can easily be used in a for each loop.
+	 * Convenience method for creating an {@link Iterable} from an {@link Enumeration} so that it can easily be used in a for each loop.
 	 * </p>
 	 * <p>
-	 * Enumerations used in this fashion should be discarded, as their state
-	 * will be altered once the for loop is executed.<br/>
-	 * Likewise, the resulting Iterable should only have
-	 * {@link Iterable#iterator()} invoked once.
+	 * Enumerations used in this fashion should be discarded, as their state will be altered once the for loop is executed.<br/>
+	 * Likewise, the resulting Iterable should only have {@link Iterable#iterator()} invoked once.
 	 * </p>
 	 * <p>
-	 * The iterator created by the resulting iterable does not support
-	 * {@link Iterator#remove()}
+	 * The iterator created by the resulting iterable does not support {@link Iterator#remove()}
 	 * </p>
 	 * <p>
 	 * e.g.
@@ -432,5 +500,27 @@ public class Expressive {
 				return iterator;
 			}
 		};
+	}
+
+	/**
+	 * Makes a best guess at what kind of map to instantiate based on the given map.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	private static <X, Y> Map<X, Y> createMap(Map<?, ?> map) {
+		if (Cast.is(map, ConcurrentHashMap.class)) {
+			return new ConcurrentHashMap<X, Y>(map.size());
+		} else if (Cast.is(map, WeakHashMap.class)) {
+			return new WeakHashMap<X, Y>(map.size());
+		} else if (Cast.is(map, IdentityHashMap.class)) {
+			return new IdentityHashMap<X, Y>(map.size());
+		} else if (Cast.is(map, SortedMap.class)) {
+			return new TreeMap<X, Y>();
+		} else if (Cast.is(map, LinkedHashMap.class)) {
+			return new LinkedHashMap<X, Y>(map.size());
+		} else {
+			return new HashMap<X, Y>();
+		}
 	}
 }

@@ -20,7 +20,7 @@
  */
 package com.atomicleopard.expressive;
 
-import static com.atomicleopard.expressive.Expressive.*;
+import static com.atomicleopard.expressive.Expressive.list;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 

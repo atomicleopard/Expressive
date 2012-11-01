@@ -21,8 +21,7 @@
 package com.atomicleopard.expressive.transform;
 
 import static com.atomicleopard.expressive.Expressive.mapKeys;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 import java.util.Map;
