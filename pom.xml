@@ -23,9 +23,9 @@
 		</developer>
 	</developers>
 	<scm>
-		<connection>scm:svn:http://svn.atomicleopard.com/public/expressive/trunk</connection>
-		<developerConnection>scm:svn:http://svn.atomicleopard.com/public/expressive/trunk</developerConnection>
-		<url>http://svn.atomicleopard.com/public/expressive/trunk</url>
+		<connection>scm:git:git@github.com:atomicleopard/Expressive.git</connection>
+		<url>scm:git:git@github.com:atomicleopard/Expressive.git</url>
+		<developerConnection>scm:git:git@github.com:atomicleopard/Expressive.git</developerConnection>
 	</scm>
 	<licenses>
 		<license>
