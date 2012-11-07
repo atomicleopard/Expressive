@@ -31,9 +31,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import com.atomicleopard.expressive.collection.Pair;
+import com.atomicleopard.expressive.predicate.EPredicate;
 
 public class EListImplTest {
+
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();;
 
 	@Test
 	public void shouldConstructWithVarArgs() {
@@ -477,6 +485,103 @@ public class EListImplTest {
 	}
 
 	@Test
+	public void shouldGetItemsMatchingPredicate() {
+		EListImpl<String> list = new EListImpl<String>("A", "B", "C", "D");
+		assertThat(list.getItems(Expressive.Predicate.is("B")), is(list("B")));
+
+		// should return a new list
+		assertThat(list.getItems(Expressive.Predicate.is("B")), not(sameInstance((EList<String>) list)));
+
+		// verify does not modify the list
+		assertThat(list, hasItems("A", "B", "C", "D"));
+	}
+
+	@Test
+	public void shouldThrowNPEWhenGetItemsMatchingPredicateWithNullPredicate() {
+		thrown.expect(NullPointerException.class);
+		new EListImpl<String>("A", "B", "C", "D").getItems(null);
+	}
+
+	@Test
+	public void shouldGetItemsReturningEmptyCollectionWhenNoMatches() {
+		EListImpl<String> list = new EListImpl<String>("A", "B", "C", "D");
+		assertThat(list.getItems(Expressive.Predicate.<String> none()).isEmpty(), is(true));
+	}
+
+	@Test
+	public void shouldGetItemsRetainingOrder() {
+		EListImpl<String> list = new EListImpl<String>("A", "B", "C", "D");
+		assertThat(list.getItems(Expressive.Predicate.<String> any()), is(list("A", "B", "C", "D")));
+		Collections.shuffle(list);
+		assertThat(list.getItems(Expressive.Predicate.<String> any()), is((EList<String>) list));
+	}
+
+	@Test
+	public void shouldRetainItemsUsingPredicate() {
+		EListImpl<String> list = new EListImpl<String>("A", "B", "C", "D");
+		assertThat(list.retainItems(Expressive.Predicate.<String> any()), is(list("A", "B", "C", "D")));
+		assertThat(list.retainItems(Expressive.Predicate.<String> any()), sameInstance((EList<String>) list));
+
+		// should retain order
+		Collections.shuffle(list);
+		assertThat(list.retainItems(Expressive.Predicate.<String> any()), is((EList<String>) list));
+
+		assertThat(list.retainItems(Expressive.Predicate.is("B")), is(list("B")));
+
+		assertThat(list.retainItems(Expressive.Predicate.<String> none()).isEmpty(), is(true));
+
+		// should modify original instance
+		assertThat(list.isEmpty(), is(true));
+	}
+
+	@Test
+	public void shouldThrowNPEWhenRetainItemsWithNullPredicate() {
+		thrown.expect(NullPointerException.class);
+		new EListImpl<String>("A", "B", "C", "D").retainItems((EPredicate<String>) null);
+	}
+
+	@Test
+	public void shouldRemoveItemsUsingPredicate() {
+		EListImpl<String> list = new EListImpl<String>("A", "B", "C", "D");
+		assertThat(list.removeItems(Expressive.Predicate.<String> none()), is(list("A", "B", "C", "D")));
+		assertThat(list.removeItems(Expressive.Predicate.<String> none()), sameInstance((EList<String>) list));
+
+		// should retain order
+		Collections.shuffle(list);
+		assertThat(list.removeItems(Expressive.Predicate.<String> none()), is((EList<String>) list));
+
+		list = new EListImpl<String>("A", "B", "C", "D");
+		assertThat(list.removeItems(Expressive.Predicate.anyOf("A", "B")), is(list("C", "D")));
+
+		assertThat(list.removeItems(Expressive.Predicate.<String> any()).isEmpty(), is(true));
+
+		// should modify original instance
+		assertThat(list.isEmpty(), is(true));
+	}
+
+	@Test
+	public void shouldThrowNPEWhenRemoveItemsWithNullPredicate() {
+		thrown.expect(NullPointerException.class);
+		new EListImpl<String>("A", "B", "C", "D").removeItems((EPredicate<String>) null);
+	}
+
+	@Test
+	public void shouldSplitEListUsingPredicate() {
+		EListImpl<String> list = new EListImpl<String>("A", "B", "C", "D");
+		Pair<EList<String>, EList<String>> split = list.split(Expressive.Predicate.anyOf("A", "B"));
+		assertThat(split.getA(), is(list("A", "B")));
+		assertThat(split.getB(), is(list("C", "D")));
+		// should not modify original list
+		assertThat(list, is(list("A", "B", "C", "D")));
+	}
+
+	@Test
+	public void shouldThrowNPEWhenSplitWithNullPredicate() {
+		thrown.expect(NullPointerException.class);
+		new EListImpl<String>("A", "B", "C", "D").split(null);
+	}
+
+	@Test
 	public void shouldPassTheExampleTestSnippetFromTheJavadoc() {
 		EList<String> list = Expressive.list("A", "B", "C");
 		EList<String> items = list.getItems(-2, 3);
@@ -488,6 +593,5 @@ public class EListImplTest {
 	public void shouldCreateWithDelegateOfGivenInitialCapacity() {
 		EListImpl<String> eListImpl = new EListImpl<String>(10);
 		assertThat(eListImpl, is(notNullValue()));
-
 	}
 }

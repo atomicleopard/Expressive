@@ -10,9 +10,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class TripletsTest {
+
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void shouldCreateATripletsAndRetainAndAllowLookupOfGivenValues() {
@@ -75,6 +80,12 @@ public class TripletsTest {
 		assertThat(triplets.get(1, 3), is(nullValue()));
 		assertThat(triplets.size(), is(0));
 		assertThat(triplets.isEmpty(), is(true));
+	}
+
+	@Test
+	public void shouldThrowNPEIfConstructedWithANullDelegate() {
+		thrown.expect(NullPointerException.class);
+		new Triplets<String, String, String>(null);
 	}
 
 	@Test
@@ -185,6 +196,34 @@ public class TripletsTest {
 
 		assertThat(triplets.hashCode(), is(delegate.hashCode()));
 		assertThat(triplets.toString(), is(delegate.toString()));
+	}
 
+	@Test
+	public void shouldBaseEqualityOnDelegateContents() {
+		Triplets<Integer, Integer, String> triplets = new Triplets<Integer, Integer, String>();
+		triplets.put(1, 1, "1");
+		triplets.put(2, 2, "2");
+
+		Triplets<Integer, Integer, String> sameTriplets = new Triplets<Integer, Integer, String>();
+		sameTriplets.put(1, 1, "1");
+		sameTriplets.put(2, 2, "2");
+		
+		Triplets<Integer, Integer, String> differentTriplets = new Triplets<Integer, Integer, String>();
+		differentTriplets.put(1, 1, "1");
+
+		assertThat(triplets.equals(triplets), is(true));
+		assertThat(triplets.equals(sameTriplets), is(true));
+		assertThat(triplets.equals(differentTriplets), is(false));
+		assertThat(triplets.equals(null), is(false));
+		assertThat(triplets.equals("String"), is(false));
+
+		Map<Pair<Integer, Integer>, String> mapWithSameDate = new HashMap<Pair<Integer, Integer>, String>();
+		mapWithSameDate.put(new Pair<Integer, Integer>(1, 1), "1");
+		mapWithSameDate.put(new Pair<Integer, Integer>(2, 2), "2");
+		assertThat(triplets.equals(mapWithSameDate), is(false));
+
+		// triplets is not a map
+		assertThat(mapWithSameDate.equals(triplets), is(false));
+		assertThat(mapWithSameDate.equals(sameTriplets), is(false));
 	}
 }

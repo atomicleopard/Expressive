@@ -21,6 +21,9 @@ public class Triplets<K1, K2, V> {
 	}
 
 	public Triplets(Map<Pair<K1, K2>, V> delegate) {
+		if (delegate == null) {
+			throw new NullPointerException(String.format("Cannot create a %s with a null delegate", Triplets.class.getSimpleName()));
+		}
 		this.delegate = delegate;
 	}
 
@@ -76,12 +79,27 @@ public class Triplets<K1, K2, V> {
 		return new Pair<K1, K2>(k1, k2);
 	}
 
-	public boolean equals(Object o) {
-		return delegate.equals(o);
-	}
-
+	@Override
 	public int hashCode() {
 		return delegate.hashCode();
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Triplets other = (Triplets) obj;
+		if (delegate == null) {
+			if (other.delegate != null)
+				return false;
+		} else if (!delegate.equals(other.delegate))
+			return false;
+		return true;
 	}
 
 	@Override

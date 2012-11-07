@@ -29,6 +29,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import com.atomicleopard.expressive.collection.Pair;
+import com.atomicleopard.expressive.predicate.EPredicate;
+import com.atomicleopard.expressive.predicate.NotPredicate;
+
 /**
  * <p>
  * Implementation of the {@link EList} interface.
@@ -67,8 +71,7 @@ public class EListImpl<T> implements EList<T> {
 	public EListImpl(T... values) {
 		super();
 		// TODO - The efficiency of this is based on the efficiency of the extra
-		// list creation, and how it inserts
-		// array items.
+		// list creation, and how it inserts array items.
 		this.delegate = new ArrayList<T>(Arrays.asList(values));
 	}
 
@@ -262,16 +265,60 @@ public class EListImpl<T> implements EList<T> {
 		return new EListImpl<T>(delegate.subList(start, end));
 	}
 
+	@Override
+	public EList<T> getItems(EPredicate<T> predicate) {
+		EListImpl<T> list = new EListImpl<T>();
+		for (T t : delegate) {
+			if (predicate.pass(t)) {
+				list.add(t);
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public EList<T> retainItems(EPredicate<T> predicate) {
+		return removeItems(new NotPredicate<T>(predicate));
+	}
+
+	@Override
+	public EList<T> removeItems(EPredicate<T> predicate) {
+		Iterator<T> iterator = delegate.iterator();
+		while (iterator.hasNext()) {
+			T value = iterator.next();
+			if (predicate.pass(value)) {
+				iterator.remove();
+			}
+		}
+		return this;
+	}
+
 	/**
 	 * @see Collections#sort(List)
 	 * @param comparator
 	 * @return
 	 */
+	@Override
 	public EList<T> sort(Comparator<T> comparator) {
 		Collections.sort(this.delegate, comparator);
 		return this;
 	}
 
+	@Override
+	public Pair<EList<T>, EList<T>> split(EPredicate<T> predicate) {
+		EListImpl<T> pass = new EListImpl<T>();
+		EListImpl<T> fail = new EListImpl<T>();
+		for (T t : delegate) {
+			if (predicate.pass(t)) {
+				pass.add(t);
+			} else {
+				fail.add(t);
+			}
+		}
+		return new Pair<EList<T>, EList<T>>(pass, fail);
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (o == this)
 			return true;
@@ -289,6 +336,7 @@ public class EListImpl<T> implements EList<T> {
 		return !(e1.hasNext() || e2.hasNext());
 	}
 
+	@Override
 	public int hashCode() {
 		int hashCode = 1;
 		Iterator<T> i = iterator();

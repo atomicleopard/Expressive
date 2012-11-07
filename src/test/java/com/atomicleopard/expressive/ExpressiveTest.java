@@ -155,10 +155,22 @@ public class ExpressiveTest {
 	}
 
 	@Test
+	public void shouldCreateAListFromANullIterable() {
+		EList<String> elist = list((Iterable<String>) null);
+		assertThat(elist.isEmpty(), is(true));
+	}
+
+	@Test
 	public void shouldCreateAListFromAnIterator() {
 		Iterator<String> iterator = Arrays.asList("A", "B", "C").iterator();
 		EList<String> elist = list(iterator);
 		assertThat(elist, hasItems("A", "B", "C"));
+	}
+
+	@Test
+	public void shouldCreateAListFromANullIterator() {
+		EList<String> elist = list((Iterator<String>) null);
+		assertThat(elist.isEmpty(), is(true));
 	}
 
 	@Test
@@ -248,9 +260,8 @@ public class ExpressiveTest {
 	}
 
 	@Test
-	public void shouldExcerciseTheConstructorSoIDontKeepCheckingCoverageReports() {
-		Expressive e = new Expressive();
-		assertThat(e, is(notNullValue()));
+	public void shouldHaveANonPublicCtorWhichIsCoveredSoIStopCheckingTheClassToSeeWhatDoesntHaveCoverage() {
+		assertThat(new Expressive(), is(notNullValue()));
 	}
 
 	@Test

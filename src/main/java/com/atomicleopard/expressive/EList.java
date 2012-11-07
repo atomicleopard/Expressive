@@ -25,6 +25,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.atomicleopard.expressive.collection.Pair;
+import com.atomicleopard.expressive.predicate.EPredicate;
+
 /**
  * <p>
  * {@link EList} is an extension of the Java Collections {@link List} interface designed to allow for easy use and manipulation.
@@ -165,6 +168,8 @@ public interface EList<T> extends List<T> {
 	 */
 	public EList<T> removeItems(Collection<? extends T> values);
 
+	public EList<T> removeItems(EPredicate<T> predicate);
+
 	/**
 	 * Retains only the elements in this list that are specified.
 	 * 
@@ -183,6 +188,8 @@ public interface EList<T> extends List<T> {
 	 * @see List#retainAll(Collection)
 	 */
 	public EList<T> retainItems(Collection<? extends T> values);
+
+	public EList<T> retainItems(EPredicate<T> predicate);
 
 	/**
 	 * Creates a copy of this {@link EList} containing the same elements.
@@ -222,6 +229,8 @@ public interface EList<T> extends List<T> {
 	 */
 	public EList<T> getItems(int index, int size);
 
+	public EList<T> getItems(EPredicate<T> predicate);
+
 	/**
 	 * Sorts this {@link EList} in place using the given comparator.
 	 * 
@@ -230,4 +239,6 @@ public interface EList<T> extends List<T> {
 	 * @see Collections#sort(List)
 	 */
 	public EList<T> sort(Comparator<T> comparator);
+
+	public Pair<EList<T>, EList<T>> split(EPredicate<T> predicate);
 }

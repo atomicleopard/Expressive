@@ -25,35 +25,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.atomicleopard.expressive.ETransformer;
+import com.atomicleopard.expressive.Expressive;
+import com.atomicleopard.expressive.Expressive.Transformers;
 
 /**
- * <p>
- * Provides convenience access to {@link ETransformer}s that are of common use.
- * </p>
- * <p>
- * Java type and collection manipulation in general falls into a very few small
- * categories, such as reading properties of a homogeneous collection of types,
- * reordering of collections or changing the representation of a data set (such
- * as from list to a lookup map), or doing lookups in maps/dictionaries.
- * </p>
- * <p>
- * The {@link ETransformer}s provided by this class attempt to meet the needs of
- * many of these typical use cases:
- * </p>
- * <ul>
- * <li>{@link #usingLookup(Map)} provides a simple map lookup through a uniform
- * interface</li>
- * <li>{@link #toProperty(String)} and variants provide a bean to bean property
- * transformation. Used in conjunction with {@link CollectionTransformer} this
- * provides a succinct and naturally expressed way of extracting values from
- * standard java DTO.</li>
- * <li>{@link #toBeanLookup(String)} and variants provides a transformer which
- * will create a one-to-many lookup map based on a bean property</li>
- * <li>{@link #toKeyBeanLookup(String)} and variants provides a transformer
- * which will create a one-to-one lookup map based on a bean property</li>
- * </ul>
- * 
- * @see CollectionTransformer
+ * This interface is superseded by {@link Transformers}. Prefer those methods over these.
+ * This will become deprecated in a future release.
  */
 public class ETransformers {
 	ETransformers() {
@@ -61,62 +38,50 @@ public class ETransformers {
 
 	/**
 	 * <p>
-	 * Given a lookup table in the form of a {@link Map} returns an
-	 * {@link ETransformer}. The returned {@link ETransformer} will provide a
-	 * transformation to input objects by performing a lookup in the given
-	 * lookup map.
+	 * Given a lookup table in the form of a {@link Map} returns an {@link ETransformer}. The returned {@link ETransformer} will provide a transformation to input objects by performing a lookup in the
+	 * given lookup map.
 	 * </p>
 	 * <p>
-	 * If {@link ETransformer#to(Object)} is invoked with a value which is not a
-	 * key in the map, null will be returned.
+	 * If {@link ETransformer#to(Object)} is invoked with a value which is not a key in the map, null will be returned.
 	 * </p>
+	 * 
+	 * @see Expressive.Transformers#usingLookup(Map)
 	 */
 	public static <From, To> ETransformer<From, To> usingLookup(Map<From, To> lookup) {
-		return new MappingTransformer<From, To>(lookup);
+		return Expressive.Transformers.usingLookup(lookup);
 	}
 
 	/**
 	 * <p>
-	 * Given a the name of a javabean property returns an {@link ETransformer}.
-	 * The returned {@link ETransformer} will provide a transformation to input
-	 * javabean objects by returning the the value of the identified property
-	 * contained within the bean.
+	 * Given a the name of a javabean property returns an {@link ETransformer}. The returned {@link ETransformer} will provide a transformation to input javabean objects by returning the the value of
+	 * the identified property contained within the bean.
 	 * </p>
 	 * <p>
-	 * If a null object is passed to the resulting {@link ETransformer}, it will
-	 * return null.
+	 * If a null object is passed to the resulting {@link ETransformer}, it will return null.
 	 * </p>
 	 * <p>
-	 * If an object which does not provide access to the named property is
-	 * passed to the resulting {@link ETransformer} it will throw a
-	 * {@link RuntimeException}.
+	 * If an object which does not provide access to the named property is passed to the resulting {@link ETransformer} it will throw a {@link RuntimeException}.
 	 * </p>
 	 * 
 	 * @param propertyName
 	 *            The name of the javabean property to read
 	 * 
-	 * @see #toProperty(String, Class)
+	 * @see Expressive.Transformers#toProperty(String)
 	 */
 	public static <Bean, Property> ETransformer<Bean, Property> toProperty(String propertyName) {
-		return new BeanPropertyTransformer<Bean, Property>(propertyName);
+		return Expressive.Transformers.toProperty(propertyName);
 	}
 
 	/**
 	 * <p>
-	 * Given a {@link Class} and the name of a javabean property returns an
-	 * {@link ETransformer}. The returned {@link ETransformer} will provide a
-	 * transformation to input javabean objects whose type matches the given
-	 * class by returning the the value of the identified property contained
-	 * within the bean.
+	 * Given a {@link Class} and the name of a javabean property returns an {@link ETransformer}. The returned {@link ETransformer} will provide a transformation to input javabean objects whose type
+	 * matches the given class by returning the the value of the identified property contained within the bean.
 	 * </p>
 	 * <p>
-	 * If a null object is passed to the resulting {@link ETransformer}, it will
-	 * return null.
+	 * If a null object is passed to the resulting {@link ETransformer}, it will return null.
 	 * </p>
 	 * <p>
-	 * If an object which does not provide access to the named property is
-	 * passed to the resulting {@link ETransformer} it will throw a
-	 * {@link RuntimeException}.
+	 * If an object which does not provide access to the named property is passed to the resulting {@link ETransformer} it will throw a {@link RuntimeException}.
 	 * </p>
 	 * 
 	 * @param propertyName
@@ -126,188 +91,142 @@ public class ETransformers {
 	 *            apply to.
 	 * 
 	 * @return
-	 * @see #toProperty(String)
+	 * @see Expressive.Transformers#toProperty(String, Class)
 	 */
 	public static <Bean, Property> ETransformer<Bean, Property> toProperty(String propertyName, Class<Bean> clazz) {
-		return new BeanPropertyTransformer<Bean, Property>(clazz, propertyName);
+		return Expressive.Transformers.toProperty(propertyName, clazz);
 	}
 
 	/**
 	 * <p>
-	 * Given a the name of a javabean property returns an {@link ETransformer}.
-	 * The returned {@link ETransformer} will provide a transformation across a
-	 * collection of input javabean objects by returning a map which can be used
-	 * as a lookup table. The lookup table maps from property value to the list
-	 * of beans containing that value.
+	 * Given a the name of a javabean property returns an {@link ETransformer}. The returned {@link ETransformer} will provide a transformation across a collection of input javabean objects by
+	 * returning a map which can be used as a lookup table. The lookup table maps from property value to the list of beans containing that value.
 	 * </p>
 	 * <p>
-	 * If a null collection is passed to the resulting {@link ETransformer}, it
-	 * will return an empty map.
+	 * If a null collection is passed to the resulting {@link ETransformer}, it will return an empty map.
 	 * </p>
 	 * <p>
-	 * If any object in the collection provided to the resulting transformer
-	 * does not provide access to the named property it will throw a
-	 * {@link RuntimeException}.
+	 * If any object in the collection provided to the resulting transformer does not provide access to the named property it will throw a {@link RuntimeException}.
 	 * </p>
 	 * <p>
-	 * If the given property is known to be unique across the set of input beans
-	 * (for example an id, a pk, or a key) then {@link #toKeyBeanLookup(String)}
-	 * is a better transformer.
+	 * If the given property is known to be unique across the set of input beans (for example an id, a pk, or a key) then {@link #toKeyBeanLookup(String)} is a better transformer.
 	 * </p>
 	 * <p>
-	 * This transformer will retain the order (if any) of the given collection
-	 * in both the resulting map and of individual beans in a mapped to a
-	 * property value. That is, if the collection is ordered, the map keys will
-	 * be ordered based on the order of the beans they are first matched in.
+	 * This transformer will retain the order (if any) of the given collection in both the resulting map and of individual beans in a mapped to a property value. That is, if the collection is ordered,
+	 * the map keys will be ordered based on the order of the beans they are first matched in.
 	 * </p>
 	 * 
 	 * @param propertyName
 	 * 
-	 * @see #toBeanLookup(String, Class)
+	 * @see Expressive.Transformers#toBeanLookup(String)
 	 */
 	public static <Bean, Property> ETransformer<Collection<Bean>, Map<Property, List<Bean>>> toBeanLookup(String propertyName) {
-		return new BeanPropertyLookupTransformer<Bean, Property>(propertyName);
+		return Expressive.Transformers.toBeanLookup(propertyName);
 	}
 
 	/**
 	 * <p>
-	 * Given a {@link Class} and the name of a javabean property returns an
-	 * {@link ETransformer}. The returned {@link ETransformer} will provide a
-	 * transformation across a collection of input javabean objects of the given
-	 * class by returning a map which can be used as a lookup table. The lookup
-	 * table maps from property value to the list of beans containing that
-	 * value.
+	 * Given a {@link Class} and the name of a javabean property returns an {@link ETransformer}. The returned {@link ETransformer} will provide a transformation across a collection of input javabean
+	 * objects of the given class by returning a map which can be used as a lookup table. The lookup table maps from property value to the list of beans containing that value.
 	 * </p>
 	 * <p>
-	 * If a null collection is passed to the resulting {@link ETransformer}, it
-	 * will return an empty map.
+	 * If a null collection is passed to the resulting {@link ETransformer}, it will return an empty map.
 	 * </p>
 	 * <p>
-	 * If any object in the collection provided to the resulting transformer
-	 * does not provide access to the named property it will throw a
-	 * {@link RuntimeException}.
+	 * If any object in the collection provided to the resulting transformer does not provide access to the named property it will throw a {@link RuntimeException}.
 	 * </p>
 	 * <p>
-	 * If the given property is known to be unique across the set of input beans
-	 * (for example an id, a pk, or a key) then
-	 * {@link #toKeyBeanLookup(String, Class)} is a better transformer.
+	 * If the given property is known to be unique across the set of input beans (for example an id, a pk, or a key) then {@link #toKeyBeanLookup(String, Class)} is a better transformer.
 	 * </p>
 	 * <p>
-	 * This transformer will retain the order (if any) of the given collection
-	 * in both the resulting map and of individual beans in a mapped to a
-	 * property value. That is, if the collection is ordered, the map keys will
-	 * be ordered based on the order of the beans they are first matched in.
+	 * This transformer will retain the order (if any) of the given collection in both the resulting map and of individual beans in a mapped to a property value. That is, if the collection is ordered,
+	 * the map keys will be ordered based on the order of the beans they are first matched in.
 	 * </p>
 	 * 
 	 * @param propertyName
 	 * @param clazz
-	 * @see #toBeanLookup(String)
+	 * @see Expressive.Transformers#toBeanLookup(String)
 	 */
 	public static <Bean, Property> ETransformer<Collection<Bean>, Map<Property, List<Bean>>> toBeanLookup(String propertyName, Class<Bean> clazz) {
-		return new BeanPropertyLookupTransformer<Bean, Property>(clazz, propertyName);
+		return Expressive.Transformers.toBeanLookup(propertyName, clazz);
 	}
 
 	/**
 	 * <p>
-	 * Given a the name of a javabean property returns an {@link ETransformer}.
-	 * The returned {@link ETransformer} will provide a transformation across a
-	 * collection of input javabean objects by returning a map which can be used
-	 * as a lookup table. The lookup table maps from property value to the bean
-	 * containing that value.
+	 * Given a the name of a javabean property returns an {@link ETransformer}. The returned {@link ETransformer} will provide a transformation across a collection of input javabean objects by
+	 * returning a map which can be used as a lookup table. The lookup table maps from property value to the bean containing that value.
 	 * </p>
 	 * <p>
-	 * If a null collection is passed to the resulting {@link ETransformer}, it
-	 * will return an empty map.
+	 * If a null collection is passed to the resulting {@link ETransformer}, it will return an empty map.
 	 * </p>
 	 * <p>
-	 * If any object in the collection provided to the resulting transformer
-	 * does not provide access to the named property it will throw a
-	 * {@link RuntimeException}.
+	 * If any object in the collection provided to the resulting transformer does not provide access to the named property it will throw a {@link RuntimeException}.
 	 * </p>
 	 * <p>
-	 * If the given property is known to be unique across the set of input beans
-	 * (for example an id, a pk, or a key) then {@link #toKeyBeanLookup(String)}
-	 * is a better transformer.
+	 * If the given property is known to be unique across the set of input beans (for example an id, a pk, or a key) then {@link #toKeyBeanLookup(String)} is a better transformer.
 	 * </p>
 	 * <p>
-	 * If more than one bean contains the same value for the property (or more
-	 * specifically they return true for their equals and hashcode), only the
-	 * last entry (based on the iteration order of the given collection) will be
-	 * present.
+	 * If more than one bean contains the same value for the property (or more specifically they return true for their equals and hashcode), only the last entry (based on the iteration order of the
+	 * given collection) will be present.
 	 * </p>
 	 * <p>
-	 * This transformer will retain the order (if any) of the given collection
-	 * in both the resulting map and of individual beans in a mapped to a
-	 * property value. That is, if the collection is ordered, the map keys will
-	 * be ordered based on the order of the beans they are first matched in.
+	 * This transformer will retain the order (if any) of the given collection in both the resulting map and of individual beans in a mapped to a property value. That is, if the collection is ordered,
+	 * the map keys will be ordered based on the order of the beans they are first matched in.
 	 * </p>
 	 * 
 	 * @param propertyName
 	 * 
-	 * @see #toKeyBeanLookup(String, Class)
+	 * @see Expressive.Transformers#toKeyBeanLookup(String, Class)
 	 */
 	public static <Bean, Property> ETransformer<Collection<Bean>, Map<Property, Bean>> toKeyBeanLookup(String propertyName, Class<Bean> clazz) {
-		return new KeyBeanPropertyLookupTransformer<Bean, Property>(clazz, propertyName);
+		return Expressive.Transformers.toKeyBeanLookup(propertyName, clazz);
 	}
 
 	/**
 	 * <p>
-	 * Given a {@link Class} and the name of a javabean property returns an
-	 * {@link ETransformer}. The returned {@link ETransformer} will provide a
-	 * transformation across a collection of input javabean objects of the given
-	 * type by returning a map which can be used as a lookup table. The lookup
-	 * table maps from property value to the bean containing that value.
+	 * Given a {@link Class} and the name of a javabean property returns an {@link ETransformer}. The returned {@link ETransformer} will provide a transformation across a collection of input javabean
+	 * objects of the given type by returning a map which can be used as a lookup table. The lookup table maps from property value to the bean containing that value.
 	 * </p>
 	 * <p>
-	 * If a null collection is passed to the resulting {@link ETransformer}, it
-	 * will return an empty map.
+	 * If a null collection is passed to the resulting {@link ETransformer}, it will return an empty map.
 	 * </p>
 	 * <p>
-	 * If any object in the collection provided to the resulting transformer
-	 * does not provide access to the named property it will throw a
-	 * {@link RuntimeException}.
+	 * If any object in the collection provided to the resulting transformer does not provide access to the named property it will throw a {@link RuntimeException}.
 	 * </p>
 	 * <p>
-	 * If the given property is known to be unique across the set of input beans
-	 * (for example an id, a pk, or a key) then {@link #toKeyBeanLookup(String)}
-	 * is a better transformer.
+	 * If the given property is known to be unique across the set of input beans (for example an id, a pk, or a key) then {@link #toKeyBeanLookup(String)} is a better transformer.
 	 * </p>
 	 * <p>
-	 * If more than one bean contains the same value for the property (or more
-	 * specifically they return true for their equals and hashcode), only the
-	 * last entry (based on the iteration order of the given collection) will be
-	 * present.
+	 * If more than one bean contains the same value for the property (or more specifically they return true for their equals and hashcode), only the last entry (based on the iteration order of the
+	 * given collection) will be present.
 	 * </p>
 	 * <p>
-	 * This transformer will retain the order (if any) of the given collection
-	 * in both the resulting map and of individual beans in a mapped to a
-	 * property value. That is, if the collection is ordered, the map keys will
-	 * be ordered based on the order of the beans they are first matched in.
+	 * This transformer will retain the order (if any) of the given collection in both the resulting map and of individual beans in a mapped to a property value. That is, if the collection is ordered,
+	 * the map keys will be ordered based on the order of the beans they are first matched in.
 	 * </p>
 	 * 
 	 * @param propertyName
 	 * 
-	 * @see #toKeyBeanLookup(String)
+	 * @see Expressive.Transformers#toKeyBeanLookup(String)
 	 */
 	public static <Bean, Property> ETransformer<Collection<Bean>, Map<Property, Bean>> toKeyBeanLookup(String propertyName) {
-		return new KeyBeanPropertyLookupTransformer<Bean, Property>(propertyName);
+		return Expressive.Transformers.toKeyBeanLookup(propertyName);
 	}
 
 	/**
 	 * <p>
-	 * Creates a {@link CollectionTransformer} for the given
-	 * {@link ETransformer}.
+	 * Creates a {@link CollectionTransformer} for the given {@link ETransformer}.
 	 * </p>
 	 * <p>
-	 * {@link CollectionTransformer}s use a transformer to transform a
-	 * collection rather than an individual object.
+	 * {@link CollectionTransformer}s use a transformer to transform a collection rather than an individual object.
 	 * </p>
 	 * 
 	 * @param transformer
 	 * @return a collection transformer which uses the given transformer to
 	 *         perform transformations
+	 * @see Expressive.Transformers#transformAllUsing(ETransformer)
 	 */
 	public static <From, To> CollectionTransformer<From, To> transformAllUsing(ETransformer<From, To> transformer) {
-		return new CollectionTransformer<From, To>(transformer);
+		return Expressive.Transformers.transformAllUsing(transformer);
 	}
 }
