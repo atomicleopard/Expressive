@@ -22,7 +22,7 @@ public class ComparatorBuilderTest {
 		builder = builder.on("str2").naturally();
 		builder = builder.on("int1").naturally();
 		builder = builder.on("dbl1").naturally();
-		assertThat(builder, sameInstance(originalBuilder));
+		assertThat(builder, not(sameInstance(originalBuilder)));
 
 		assertThat(builder.compare(tc("a", "b", 1, 2d), tc("a", "b", 1, 2d)), is(0));
 
@@ -48,10 +48,10 @@ public class ComparatorBuilderTest {
 	@Test
 	public void shouldBuildAComparatorUsingSpecifiedComparatorsOnProperties() {
 		ComparatorBuilder<TestCompare> builder = new ComparatorBuilder<TestCompare>(TestCompare.class);
-		builder.<String> on("str1").using(new NoopComparator<String>());
-		builder.<String> on("str2").using(new CaseInsensitiveComparator());
-		builder.<Integer> on("int1").using(new ComparableComparator<Integer>());
-		builder.<Double> on("dbl1").using(new ConstantComparator<Double>(100));
+		builder = builder.<String> on("str1").using(new NoopComparator<String>());
+		builder = builder.<String> on("str2").using(new CaseInsensitiveComparator());
+		builder = builder.<Integer> on("int1").using(new ComparableComparator<Integer>());
+		builder = builder.<Double> on("dbl1").using(new ConstantComparator<Double>(100));
 
 		assertThat(builder.compare(tc("a", "a", 0, 0d), tc("a", "a", 0, 0d)), is(100));
 		// constant comparator on dbl1 means that the value is irrelevant
@@ -85,10 +85,10 @@ public class ComparatorBuilderTest {
 		when(throwComparator.compare(Mockito.any(Double.class), Mockito.any(Double.class))).thenThrow(new ArrayIndexOutOfBoundsException());
 
 		ComparatorBuilder<TestCompare> builder = new ComparatorBuilder<TestCompare>(TestCompare.class);
-		builder.<String> on("str1").using(new NoopComparator<String>());
-		builder.<String> on("str2").using(new CaseInsensitiveComparator());
-		builder.<Integer> on("int1").using(new ComparableComparator<Integer>());
-		builder.<Double> on("dbl1").using(throwComparator);
+		builder = builder.<String> on("str1").using(new NoopComparator<String>());
+		builder = builder.<String> on("str2").using(new CaseInsensitiveComparator());
+		builder = builder.<Integer> on("int1").using(new ComparableComparator<Integer>());
+		builder = builder.<Double> on("dbl1").using(throwComparator);
 
 		builder.compare(tc("a", "a", 0, 0d), tc("a", "a", 0, 0d));
 	}
@@ -104,12 +104,26 @@ public class ComparatorBuilderTest {
 	@Test
 	public void shouldBuildAComparatorWithoutCachingProperties() {
 		ComparatorBuilder<TestCompare> builder = new ComparatorBuilder<TestCompare>(TestCompare.class, true);
-		builder.<String> on("str1").using(new NoopComparator<String>());
-		builder.<String> on("str2").using(new CaseInsensitiveComparator());
+		builder = builder.<String> on("str1").using(new NoopComparator<String>());
+		builder = builder.<String> on("str2").using(new CaseInsensitiveComparator());
 
 		assertThat(builder.compare(tc("a", "a", 0, 0d), tc("a", "a", 0, 0d)), is(0));
 		assertThat(builder.compare(tc("a", "a", 0, 0d), tc("a", "A", 0, 0d)), is(0));
 		assertThat(builder.compare(tc("a", "a", 0, 0d), tc("a", "B", 0, 0d)), is(-1));
+	}
+
+	@Test
+	public void shouldReturnANewBuilderForEachPropertyAndNotMutateOriginal() {
+		ComparatorBuilder<TestCompare> builder1 = new ComparatorBuilder<TestCompare>(TestCompare.class, true);
+		ComparatorBuilder<TestCompare> builder2 = builder1.<String> on("str1").using(new NoopComparator<String>());
+		ComparatorBuilder<TestCompare> builder3 = builder2.<String> on("str2").using(new CaseInsensitiveComparator());
+
+		assertThat(builder1, is(not(sameInstance(builder2))));
+		assertThat(builder1, is(not(sameInstance(builder3))));
+		assertThat(builder2, is(not(sameInstance(builder3))));
+		assertThat(builder1.propertyComparators.size(), is(not(builder2.propertyComparators.size())));
+		assertThat(builder1.propertyComparators.size(), is(not(builder3.propertyComparators.size())));
+		assertThat(builder2.propertyComparators.size(), is(not(builder3.propertyComparators.size())));
 	}
 
 	private TestCompare tc(String str1, String str2, Integer int1, Double dbl1) {

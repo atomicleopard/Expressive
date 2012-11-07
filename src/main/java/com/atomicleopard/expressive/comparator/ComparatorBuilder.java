@@ -14,9 +14,9 @@ import com.atomicleopard.expressive.ETransformer;
 import com.atomicleopard.expressive.transform.ETransformers;
 
 public class ComparatorBuilder<T> implements Comparator<T> {
-	private LinkedHashMap<String, Comparator<?>> propertyComparators = new LinkedHashMap<String, Comparator<?>>();
 	private Class<T> type;
 	private Map<String, PropertyDescriptor> getters;
+	protected LinkedHashMap<String, Comparator<?>> propertyComparators = new LinkedHashMap<String, Comparator<?>>();
 
 	private static Map<Class<?>, Map<String, PropertyDescriptor>> PropertyDescriptorCache = new HashMap<Class<?>, Map<String, PropertyDescriptor>>();
 	private static ETransformer<Collection<PropertyDescriptor>, Map<String, PropertyDescriptor>> PropertyDescriptorLookupTransformer = ETransformers.toKeyBeanLookup("name", PropertyDescriptor.class);
@@ -28,6 +28,12 @@ public class ComparatorBuilder<T> implements Comparator<T> {
 	public ComparatorBuilder(Class<T> type, boolean noCache) {
 		this.type = type;
 		this.getters = getPropertyDescriptions(type, noCache);
+	}
+
+	private ComparatorBuilder(ComparatorBuilder<T> comparatorBuilder) {
+		this.type = comparatorBuilder.type;
+		this.getters = comparatorBuilder.getters;
+		this.propertyComparators = new LinkedHashMap<String, Comparator<?>>(comparatorBuilder.propertyComparators);
 	}
 
 	protected void put(String property, Comparator<?> comparator) {
@@ -80,6 +86,12 @@ public class ComparatorBuilder<T> implements Comparator<T> {
 		}
 	}
 
+	private <S> ComparatorBuilder<T> copyAndAdd(String property, Comparator<S> comparator) {
+		ComparatorBuilder<T> copy = new ComparatorBuilder<T>(this);
+		copy.put(property, comparator);
+		return copy;
+	}
+
 	public class CompareUsing<S> {
 		private String property;
 
@@ -88,13 +100,11 @@ public class ComparatorBuilder<T> implements Comparator<T> {
 		}
 
 		public ComparatorBuilder<T> using(Comparator<S> propertyComparator) {
-			put(property, propertyComparator);
-			return ComparatorBuilder.this;
+			return copyAndAdd(property, propertyComparator);
 		}
 
 		public <C extends Comparable<C>> ComparatorBuilder<T> naturally() {
-			put(property, new ComparableComparator<C>());
-			return ComparatorBuilder.this;
+			return copyAndAdd(property, new ComparableComparator<C>());
 		}
 	}
 }
