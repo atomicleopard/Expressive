@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2011 Nicholas Okunew
+ *  Copyright (c) 2012 Nicholas Okunew
  *  All rights reserved.
  *  
  *  This file is part of the com.atomicleopard.expressive library
@@ -550,67 +550,172 @@ public class Expressive {
 		}
 	}
 
+	/**
+	 * Filter operations return views on an Iterable or Collection by applying a given {@link EPredicate} to them.
+	 * 
+	 * The operation performed is dependent on the method invoked.
+	 * 
+	 * @see EPredicate
+	 * @see Predicate
+	 */
 	public static class Filter {
 		Filter() {
 		}
 
+		/**
+		 * Return a new {@link EList} including only the items that pass the given {@link EPredicate}.
+		 * 
+		 * @param items
+		 * @param predicate
+		 * @return
+		 */
 		public static <T, I extends Iterable<T>> EList<T> retain(I items, EPredicate<T> predicate) {
 			return list(items).retainItems(predicate);
 		}
 
+		/**
+		 * Return a new {@link EList} removing the items that pass the given {@link EPredicate}.
+		 * 
+		 * @param items
+		 * @param predicate
+		 * @return
+		 */
 		public static <T, I extends Iterable<T>> EList<T> remove(I items, EPredicate<T> predicate) {
 			return list(items).removeItems(predicate);
 		}
 
+		/**
+		 * Returns a pair of lists split using the supplied {@link EPredicate}.
+		 * The first list contains all the items passing the given predicate, the second list the rest.
+		 * 
+		 * @param items
+		 * @param predicate
+		 * @return
+		 */
 		public static <T> Pair<EList<T>, EList<T>> split(Collection<T> items, EPredicate<T> predicate) {
 			return list(items).split(predicate);
 		}
 	}
 
+	/**
+	 * <p>
+	 * Provides common implementations of {@link EPredicate}.
+	 * </p>
+	 * <p>
+	 * To promote reusability and reduce code clutter, this class provides implementations of predicates that are commonly used in code.
+	 * </p>
+	 */
 	public static class Predicate {
 		Predicate() {
 		}
 
+		/**
+		 * Creates a {@link PredicateBuilder} for the specified type.
+		 * 
+		 * @param type the class type to create a predicate for
+		 * @return a predicate builder which will allow a predicate to be created based on the properties of the specified type
+		 * @see PredicateBuilder
+		 */
 		public static <T> PredicateBuilder<T> on(Class<T> type) {
 			return new PredicateBuilder<T>(type);
 		}
 
+		/**
+		 * The returned predicate will return true for {@link EPredicate#pass(Object)} for all input.
+		 * 
+		 * @return a predicate which will pass any value
+		 */
 		public static <T> EPredicate<T> any() {
 			return new ConstantPredicate<T>(true);
 		}
 
+		/**
+		 * The returned predicate will return false for {@link EPredicate#pass(Object)} for all input.
+		 * 
+		 * @return a predicate which will not pass any value
+		 */
 		public static <T> EPredicate<T> none() {
 			return new ConstantPredicate<T>(false);
 		}
 
+		/**
+		 * The returned predicate will return true for {@link EPredicate#pass(Object)} only for objects whose {@link Object#equals(Object)} method returns true for the given argument.
+		 * 
+		 * @param object any object, or null
+		 * @return a predicate only passing objects equal to the given object, or null if given null
+		 */
 		public static <T> EPredicate<T> is(T object) {
 			return new EqualsPredicate<T>(object);
 		}
 
+		/**
+		 * The returned predicate will return true for {@link EPredicate#pass(Object)} only for objects whose {@link Object#equals(Object)} method
+		 * returns true for any of the the given arguments.
+		 * 
+		 * @param objects any objects, including null
+		 * @return a predicate only passing objects equal to any of the given objects
+		 */
 		public static <T> AnyOfPredicate<T> anyOf(T... objects) {
 			return new AnyOfPredicate<T>(Collections.<EPredicate<T>> emptyList()).or(objects);
 		}
 
+		/**
+		 * The returned predicate will return true for {@link EPredicate#pass(Object)} for any objects whose {@link Object#equals(Object)} method
+		 * does not return true for any of the the given arguments.
+		 * 
+		 * @param objects any objects, including null
+		 * @return a predicate only passing objects not equal to any of the given objects
+		 */
 		public static <T> EPredicate<T> noneOf(T... objects) {
 			return not(anyOf(objects));
 		}
 
+		/**
+		 * The returned predicate will return true for {@link EPredicate#pass(Object)} only for null.
+		 * 
+		 * @return a predicate which will pass null, and fail any non-null value
+		 */
 		public static <T> EPredicate<T> isNull() {
 			return new NullPredicate<T>();
 		}
 
+		/**
+		 * The returned predicate will return true for {@link EPredicate#pass(Object)} for any non-null object.
+		 * 
+		 * @return a predicate which will pass any object, and fail null
+		 */
 		public static <T> EPredicate<T> notNull() {
 			return not(Predicate.<T> isNull());
 		}
 
+		/**
+		 * The returned predicate will return true for {@link EPredicate#pass(Object)} for any objects whose {@link Object#equals(Object)} method
+		 * returns false for the given argument.
+		 * 
+		 * @param object any object, or null
+		 * @return a predicate passing all objects not equal to the given object, or not null if given null
+		 */
 		public static <T> EPredicate<T> not(T value) {
 			return new NotPredicate<T>(is(value));
 		}
 
+		/**
+		 * The returned predicate will return the opposite of the given {@link EPredicate}.
+		 * 
+		 * @param predicate any predicate, must not be null
+		 * @return a predicate which will pass any object the given predicate would fail, and vice-versa
+		 */
 		public static <T> EPredicate<T> not(EPredicate<T> predicate) {
 			return new NotPredicate<T>(predicate);
 		}
 
+		/**
+		 * The returned predicate will return true for {@link EPredicate#pass(Object)} for any value that would pass all
+		 * of the given {@link EPredicate} instances.
+		 * 
+		 * @param predicates
+		 * @return a predicate which will pass any object which passes all of the given predicates
+		 */
 		public static <T> AllOfPredicate<T> allOf(EPredicate<T>... predicates) {
 			return new AllOfPredicate<T>(predicates);
 		}
@@ -835,34 +940,92 @@ public class Expressive {
 		}
 	}
 
+	/**
+	 * <p>
+	 * Provides common implementations of comparators.
+	 * </p>
+	 * <p>
+	 * To promote reusability and reduce code clutter, this class provides implementations of comparators that are commonly used in code.
+	 * </p>
+	 */
 	public static class Comparators {
 		Comparators() {
 		}
 
+		/**
+		 * Returns a {@link ComparatorBuilder} which allows the creation of a comparator for the given type based on the values
+		 * of bean properties on that object.
+		 * 
+		 * @param type the type for which a comparator is being built
+		 * @return a comparator builder which will allow a {@link Comparator} to be created
+		 * @see ComparatorBuilder
+		 */
 		public static <T> ComparatorBuilder<T> compare(Class<T> type) {
 			return new ComparatorBuilder<T>(type);
 		}
 
+		/**
+		 * Returns a comparator that can safely compare null values. Null values are considered to be 'greater than' non-null values.
+		 * 
+		 * @param delegate
+		 * @return a comparator which allows {@link Comparator#compare(Object, Object)} on null values
+		 * @see #nullSafe(Comparator, boolean)
+		 */
 		public static <T> Comparator<T> nullSafe(Comparator<T> delegate) {
 			return nullSafe(delegate, true);
 		}
 
+		/**
+		 * Returns a comparator that can safely compare null values.
+		 * The second argument controls whether nulls are 'greater than' or 'less than' non-null values
+		 * 
+		 * @param delegate
+		 * @param nullLast if true, null values are considered 'greater than' non-null, if false null values are 'less than'
+		 * @return a comparator which allows {@link Comparator#compare(Object, Object)} on null values
+		 */
 		public static <T> Comparator<T> nullSafe(Comparator<T> delegate, boolean nullLast) {
 			return new NullsafeComparator<T>(delegate, nullLast);
 		}
 
+		/**
+		 * Returns a string comparator which ignores case.
+		 * 
+		 * @return
+		 */
 		public static Comparator<String> caseInsensitive() {
 			return new CaseInsensitiveComparator();
 		}
 
+		/**
+		 * Returns a comparator for a given type that implements {@link Comparable}
+		 * 
+		 * @param comparable the type of the Comparable class
+		 * @return a comparator for comparing comparable instances of the given type
+		 */
 		public static <T extends Comparable<T>> Comparator<T> as(Class<T> comparable) {
 			return new ComparableComparator<T>();
 		}
 
+		/**
+		 * Returns a comparator which compares using the given comparators.
+		 * The comparison occurs using the given comparators in order, and continues until a non-zero value is returned,
+		 * or all comparators have been evaluated.
+		 * 
+		 * @param comparators
+		 * @return a comparator which compares using the given ordered comparators
+		 */
 		public static <T> Comparator<T> all(Comparator<T>... comparators) {
 			return new CompositeComparator<T>(Arrays.asList(comparators));
 		}
 
+		/**
+		 * Returns a comparator which compares using the given comparators.
+		 * The comparison occurs using the given comparators in order, and continues until a non-zero value is returned,
+		 * or all comparators have been evaluated.
+		 * 
+		 * @param comparators
+		 * @return a comparator which compares using the given ordered comparators
+		 */
 		public static <T> Comparator<T> all(Iterable<Comparator<T>> comparators) {
 			return new CompositeComparator<T>(comparators);
 		}

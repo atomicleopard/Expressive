@@ -1,3 +1,23 @@
+/*
+ *  Copyright (c) 2012 Nicholas Okunew
+ *  All rights reserved.
+ *  
+ *  This file is part of the com.atomicleopard.expressive library
+ *  
+ *  The com.atomicleopard.expressive library is free software: you 
+ *  can redistribute it and/or modify it under the terms of the GNU
+ *  Lesser General Public License as published by the Free Software Foundation, 
+ *  either version 3 of the License, or (at your option) any later version.
+ *  
+ *  The com.atomicleopard.expressive library is distributed in the hope
+ *  that it will be useful, but WITHOUT ANY WARRANTY; without even
+ *  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU Lesser General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with the com.atomicleopard.expressive library.  If not, see
+ *  http://www.gnu.org/licenses/lgpl-3.0.html.
+ */
 package com.atomicleopard.expressive.comparator;
 
 import java.beans.PropertyDescriptor;
@@ -11,8 +31,21 @@ import java.util.Map;
 import net.sf.cglib.core.ReflectUtils;
 
 import com.atomicleopard.expressive.ETransformer;
+import com.atomicleopard.expressive.Expressive;
 import com.atomicleopard.expressive.transform.ETransformers;
 
+/**
+ * <p>
+ * A {@link ComparatorBuilder} allows the creation of a comparator for a given java bean type based on the values of the properties within the bean.
+ * </p>
+ * <p>
+ * In the resulting comparator, properties are compared using the specified rules in the order they are supplied to the builder. Evaluation continues until a non-zero value occurs on a property, or
+ * all properties have been compared.
+ * </p>
+ * 
+ * @param <T>
+ * @see Expressive.Comparators#compare(Class)
+ */
 public class ComparatorBuilder<T> implements Comparator<T> {
 	private Class<T> type;
 	private Map<String, PropertyDescriptor> getters;

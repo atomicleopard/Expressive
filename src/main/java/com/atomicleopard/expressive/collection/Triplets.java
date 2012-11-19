@@ -1,3 +1,23 @@
+/*
+ *  Copyright (c) 2012 Nicholas Okunew
+ *  All rights reserved.
+ *  
+ *  This file is part of the com.atomicleopard.expressive library
+ *  
+ *  The com.atomicleopard.expressive library is free software: you 
+ *  can redistribute it and/or modify it under the terms of the GNU
+ *  Lesser General Public License as published by the Free Software Foundation, 
+ *  either version 3 of the License, or (at your option) any later version.
+ *  
+ *  The com.atomicleopard.expressive library is distributed in the hope
+ *  that it will be useful, but WITHOUT ANY WARRANTY; without even
+ *  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU Lesser General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with the com.atomicleopard.expressive library.  If not, see
+ *  http://www.gnu.org/licenses/lgpl-3.0.html.
+ */
 package com.atomicleopard.expressive.collection;
 
 import java.util.Collection;
@@ -16,10 +36,23 @@ import java.util.Set;
 public class Triplets<K1, K2, V> {
 	private Map<Pair<K1, K2>, V> delegate;
 
+	/**
+	 * Creates a new {@link Triplets} instance.
+	 */
 	public Triplets() {
 		this(new HashMap<Pair<K1, K2>, V>());
 	}
 
+	/**
+	 * <p>
+	 * Creates a new {@link Triplets} instance with the specified delegate.
+	 * </p>
+	 * <p>
+	 * This is useful when the triplets implementation has special requirements (such as being ordered, or having high concurrency properties).
+	 * </p>
+	 * 
+	 * @param delegate
+	 */
 	public Triplets(Map<Pair<K1, K2>, V> delegate) {
 		if (delegate == null) {
 			throw new NullPointerException(String.format("Cannot create a %s with a null delegate", Triplets.class.getSimpleName()));

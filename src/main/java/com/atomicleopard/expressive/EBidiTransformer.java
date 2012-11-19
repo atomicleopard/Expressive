@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2011 Nicholas Okunew
+ *  Copyright (c) 2012 Nicholas Okunew
  *  All rights reserved.
  *  
  *  This file is part of the com.atomicleopard.expressive library
