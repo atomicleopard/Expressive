@@ -56,8 +56,11 @@ import com.atomicleopard.expressive.predicate.PredicateBuilder;
 import com.atomicleopard.expressive.transform.BeanPropertyLookupTransformer;
 import com.atomicleopard.expressive.transform.BeanPropertyTransformer;
 import com.atomicleopard.expressive.transform.CollectionTransformer;
+import com.atomicleopard.expressive.transform.EnumFromStringTransformer;
+import com.atomicleopard.expressive.transform.EnumToStringTransformer;
 import com.atomicleopard.expressive.transform.KeyBeanPropertyLookupTransformer;
 import com.atomicleopard.expressive.transform.MappingTransformer;
+import com.atomicleopard.expressive.transform.ObjectToStringTransformer;
 
 /**
  * <p>
@@ -385,6 +388,46 @@ public class Expressive {
 			}
 		}
 		return list;
+	}
+
+	/**
+	 * Returns true if the given {@link Iterable} is empty or null
+	 * 
+	 * @param iterable an iterable, or null
+	 * @return true if the given {@link Iterable} is empty or null
+	 */
+	public static <T> boolean isEmpty(Iterable<T> iterable) {
+		return iterable == null ? true : !iterable.iterator().hasNext();
+	}
+
+	/**
+	 * Returns true if the given {@link Collection} is empty or null
+	 * 
+	 * @param collection a collection, or null
+	 * @return true if the given {@link Collection} is empty or null
+	 */
+	public static <T> boolean isEmpty(Collection<T> collection) {
+		return collection == null ? true : collection.isEmpty();
+	}
+
+	/**
+	 * Returns true if the given {@link Iterable} is not null and is not empty
+	 * 
+	 * @param iterable a iterable, or null
+	 * @return true if the given {@link Iterable} is not null and is not empty
+	 */
+	public static <T> boolean isNotEmpty(Iterable<T> iterable) {
+		return iterable == null ? false : iterable.iterator().hasNext();
+	}
+
+	/**
+	 * Returns true if the given {@link Collection} is not null and is not empty
+	 * 
+	 * @param collection a collection, or null
+	 * @return true if the given {@link Collection} is not null and is not empty
+	 */
+	public static <T> boolean isNotEmpty(Collection<T> collection) {
+		return collection == null ? false : !collection.isEmpty();
 	}
 
 	/**
@@ -938,6 +981,56 @@ public class Expressive {
 		public static <From, To> CollectionTransformer<From, To> transformAllUsing(ETransformer<From, To> transformer) {
 			return new CollectionTransformer<From, To>(transformer);
 		}
+
+		/**
+		 * <p>
+		 * Given an {@link Enum} type returns an {@link ETransformer}. The returned {@link ETransformer} will provide a string representation of a given enum value using the {@link Enum#name()}
+		 * method.
+		 * </p>
+		 * <p>
+		 * If a null object is passed to the resulting {@link ETransformer}, it will return null.
+		 * </p>
+		 * 
+		 * @param type
+		 *            The {@link Class} type of {@link Enum} which this transformer can apply to.
+		 * @return an {@link ETransformer} which transforms an enum to a string
+		 * @see #toEnum(Class)
+		 */
+		public static <EnumType extends Enum<EnumType>> ETransformer<EnumType, String> fromEnum(Class<EnumType> type) {
+			return new EnumToStringTransformer<EnumType>();
+		};
+
+		/**
+		 * <p>
+		 * Given an {@link Enum} type returns an {@link ETransformer}. The returned {@link ETransformer} will provide an enum value given a string using {@link Enum#valueOf(Class, String)}.
+		 * </p>
+		 * <p>
+		 * If a null object is passed to the resulting {@link ETransformer} or a string value which is not a valid enumeration , it will return null.
+		 * </p>
+		 * 
+		 * @param type
+		 *            The {@link Class} type of {@link Enum} which this transformer can apply to.
+		 * 
+		 * @return an {@link ETransformer} which transforms a string to an enum value, or null if no matching enum value exists
+		 * @see #fromEnum(Class)
+		 */
+		public static <EnumType extends Enum<EnumType>> ETransformer<String, EnumType> toEnum(Class<EnumType> type) {
+			return new EnumFromStringTransformer<EnumType>(type);
+		}
+
+		/**
+		 * <p>
+		 * Returns an {@link ETransformer} which will transform a given object to a string using {@link Object#toString()}.
+		 * </p>
+		 * <p>
+		 * If a null object is passed to the resulting {@link ETransformer}, it will return null.
+		 * </p>
+		 * 
+		 * @return an {@link ETransformer} which transforms an object to a string
+		 */
+		public static <T> ETransformer<T, String> toString() {
+			return new ObjectToStringTransformer<T>();
+		};
 	}
 
 	/**

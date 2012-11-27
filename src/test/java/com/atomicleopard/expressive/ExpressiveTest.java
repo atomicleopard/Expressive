@@ -260,6 +260,44 @@ public class ExpressiveTest {
 	}
 
 	@Test
+	public void shouldReturnTrueForEmptyCollectionOrNull() {
+		assertThat(Expressive.isEmpty(null), is(true));
+		assertThat(Expressive.isEmpty(list()), is(true));
+		assertThat(Expressive.isEmpty(list("A")), is(false));
+		assertThat(Expressive.isEmpty(Expressive.list((String) null)), is(false));
+	}
+
+	@Test
+	public void shouldReturnTrueForANonEmptyCollectionOrNull() {
+		assertThat(Expressive.isNotEmpty(null), is(false));
+		assertThat(Expressive.isNotEmpty(list()), is(false));
+		assertThat(Expressive.isNotEmpty(list("A")), is(true));
+		assertThat(Expressive.isNotEmpty(Expressive.list((String) null)), is(true));
+	}
+
+	@Test
+	public void shouldReturnTrueForEmptyIterableOrNull() {
+		Iterable<String> emptyIterable = list();
+		Iterable<String> nonEmptyIterable = list("A");
+		Iterable<String> nonEmptyIterableWithNull = list((String) null);
+		assertThat(Expressive.isEmpty((Iterable<String>)null), is(true));
+		assertThat(Expressive.isEmpty(emptyIterable), is(true));
+		assertThat(Expressive.isEmpty(nonEmptyIterable), is(false));
+		assertThat(Expressive.isEmpty(nonEmptyIterableWithNull), is(false));
+	}
+
+	@Test
+	public void shouldReturnTrueForANonEmptyIterableOrNull() {
+		Iterable<String> emptyIterable = list();
+		Iterable<String> nonEmptyIterable = list("A");
+		Iterable<String> nonEmptyIterableWithNull = list((String) null);
+		assertThat(Expressive.isNotEmpty((Iterable<String>)null), is(false));
+		assertThat(Expressive.isNotEmpty(emptyIterable), is(false));
+		assertThat(Expressive.isNotEmpty(nonEmptyIterable), is(true));
+		assertThat(Expressive.isNotEmpty(nonEmptyIterableWithNull), is(true));
+	}
+
+	@Test
 	public void shouldHaveANonPublicCtorWhichIsCoveredSoIStopCheckingTheClassToSeeWhatDoesntHaveCoverage() {
 		assertThat(new Expressive(), is(notNullValue()));
 	}

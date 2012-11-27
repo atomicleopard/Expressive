@@ -32,6 +32,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.atomicleopard.expressive.transform.EnumFromStringTransformerTest.TestEnum;
 import com.atomicleopard.expressive.transform.TestBean;
 
 public class ExpressiveTransformersTest {
@@ -117,4 +118,28 @@ public class ExpressiveTransformersTest {
 		assertThat(transformer.to(new TestBean(2, "two"), new TestBean(1, "one")), is(list(2, 1)));
 	}
 
+	@Test
+	public void shouldTransformAnObjectToStringValues() {
+		ETransformer<StringBuilder, String> transformer = Expressive.Transformers.<StringBuilder>toString();
+		assertThat(transformer, is(notNullValue()));
+		assertThat(transformer.to(new StringBuilder("expected")), is("expected"));
+		assertThat(transformer.to(null), is(nullValue()));
+	}
+	
+	@Test
+	public void shouldTransformFromAnEnumToStringValues() {
+		ETransformer<TestEnum, String> transformer = Expressive.Transformers.fromEnum(TestEnum.class);
+		assertThat(transformer, is(notNullValue()));
+		assertThat(transformer.to(TestEnum.TestVal1), is("TestVal1"));
+		assertThat(transformer.to(null), is(nullValue()));
+	}
+
+	@Test
+	public void shouldTransformFromAStringToAnEnum() {
+		ETransformer<String, TestEnum> transformer = Expressive.Transformers.toEnum(TestEnum.class);
+		assertThat(transformer, is(notNullValue()));
+		assertThat(transformer.to("TestVal1"), is(TestEnum.TestVal1));
+		assertThat(transformer.to(null), is(nullValue()));
+		assertThat(transformer.to("junk"), is(nullValue()));
+	}
 }

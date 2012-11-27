@@ -1,22 +1,25 @@
 /**
  * <p>
- * <b>{@link com.atomicleopard.expressive.Expressive} is a java library designed to enable simple and declarative usage
+ * <b>{@link com.atomicleopard.expressive.Expressive} is a java library designed to enable simple and easily read usage
  * of the Java Collections API.</b>
  * </p>
  * <p>
- * Java provides a collection API which is effective and powerful, but for many
- * simple usages, the mechanics can be cumbersome and obfuscate the intention of
- * the code.
+ * Java provides a collections API which is effective and powerful,
+ * but can be cumbersome for simple usages. 
+ * This can often result in a lack of clarity of the intention of code.
  * </p>
  * <p>
- * One example of this is when writing methods that deal with collections as
- * parameters. While in all likelihood there will only be a few instances of
- * invoking code In your application, quite often that code will be supplying
- * existing collections from your domain model, rather than building them before
- * invocation, you will more than likely be invoking that code tens of times
- * from unit tests. In this situation, the collections you wish to construct and
- * pass to the method under test will be well defined and understood, and as
- * such a declarative and understandable method of construction has more value
+ * Expressive provides methods to allow for simple but powerful interactions with java collections so that
+ * the focus of your code can be its function, rather than the mechanics of java collections.
+ * </p>
+ * <p>
+ * As an example, consider a method which takes a collection as a parameter, for example a list.
+ * While in all likelihood your application code will only invoke the method from a few places,
+ * you will more than likely be invoking the same method tens of times from unit tests.
+ * </p>
+ * <p>
+ * In this situation the collections you wish to pass in are well defined and understood. As
+ * such a creating collections in a way that is easily readable has more value
  * than a more formal collection creation strategy.
  * </p>
  * 
@@ -67,7 +70,7 @@
  * Reference map creation - the standard way:
  * <pre >
  * public static Map&lt;String, String&gt; testMapData;
- * &amp;BeforeClass
+ * @BeforeClass
  * public static void beforeClass(){
  * 	testMapData = new HashMap&gt;String, String&lt;();
  * 	testMapData.put("Mr", "Male");
@@ -158,9 +161,9 @@
  * introduce a separation of concerns. Next we'll see how to leverage the
  * CollectionTransformer to make the same code more succinct.
  * </p>
- * <h2>{@link com.atomicleopard.expressive.transform.ETransformers}</h2>
+ * <h2>{@link com.atomicleopard.expressive.Expressive.Transformers}</h2>
  * After using the patterns and tools provided by the Expressive library for months, it became apparent that the majority of use cases revolving around transformations are satisfied by a very small set of operations.
- * ETransformers provides static factory methods for creating the most common types of ETransformer. These are:
+ * Expressive.Transformers provides static factory methods for creating the most common types of ETransformer. These are:
  * <ul>
  * <li>Extracting javabean properies - such as getting the postcode from an address object - provided by ETransformer.toProperty()</li>
  * <li>Doing a Map lookup - for example transforming from one enum to an equivalent enum - provided by ETransformers.usingLookup()</li>
