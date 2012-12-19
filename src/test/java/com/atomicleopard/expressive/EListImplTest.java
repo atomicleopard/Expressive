@@ -474,6 +474,8 @@ public class EListImplTest {
 		EListImpl<String> list = new EListImpl<String>("A", "B", "C", "D");
 		assertThat(list.getItems(0, 4), is(list("A", "B", "C", "D")));
 		assertThat(list.getItems(0, 3), is(list("A", "B", "C")));
+		assertThat(list.getItems(0, 1), is(list("A")));
+		assertThat(list.getItems(0, 0).isEmpty(), is(true));
 		assertThat(list.getItems(1, 4), is(list("B", "C", "D")));
 		assertThat(list.getItems(1, 3), is(list("B", "C", "D")));
 		assertThat(list.getItems(4, 4).isEmpty(), is(true));
