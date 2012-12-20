@@ -31,7 +31,7 @@ public class MappingTransformer<K, V> implements ETransformer<K, V> {
 		this.lookup = lookup;
 	}
 
-	public V to(K from) {
+	public V from(K from) {
 		return lookup.get(from);
 	}
 }

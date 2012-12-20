@@ -38,7 +38,7 @@ public class BeanPropertyLookupTransformer<V, K> extends BaseBeanPropertyTransfo
 		super(clazz, propertyName);
 	}
 
-	public Map<K, List<V>> to(Collection<V> from) {
+	public Map<K, List<V>> from(Collection<V> from) {
 		Map<K, List<V>> results = createMapRetainingOrder(from);
 		if (from != null && !from.isEmpty()) {
 			try {

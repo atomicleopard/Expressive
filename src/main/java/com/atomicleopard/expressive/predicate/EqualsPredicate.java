@@ -55,7 +55,7 @@ public class EqualsPredicate<T> implements EPredicate<T> {
 	}
 
 	public static <T> EList<EPredicate<T>> asPredicates(List<T> values) {
-		return EqualsPredicate.Transformer.<T> ForValues().to(values);
+		return EqualsPredicate.Transformer.<T> ForValues().from(values);
 	}
 
 	public static final class Transformer {
@@ -66,7 +66,7 @@ public class EqualsPredicate<T> implements EPredicate<T> {
 		public static <T> ETransformer<T, EPredicate<T>> ForValue() {
 			return new ETransformer<T, EPredicate<T>>() {
 				@Override
-				public EPredicate<T> to(T from) {
+				public EPredicate<T> from(T from) {
 					return new EqualsPredicate<T>(from);
 				}
 			};

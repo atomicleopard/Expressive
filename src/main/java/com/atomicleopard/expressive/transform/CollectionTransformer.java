@@ -22,7 +22,6 @@ package com.atomicleopard.expressive.transform;
 
 import java.util.ArrayList;
 
-import com.atomicleopard.expressive.EBidiTransformer;
 import com.atomicleopard.expressive.EList;
 import com.atomicleopard.expressive.EListImpl;
 import com.atomicleopard.expressive.ETransformer;
@@ -35,11 +34,11 @@ import com.atomicleopard.expressive.ETransformer;
  * and reused, or for convenience created using the static methods available on
  * {@link ETransformers}.
  * 
- * On top of the regular {@link #to(Iterable)} override this class offers
+ * On top of the regular {@link #from(Iterable)} override this class offers
  * another method ({@link #to(Object...)} which accepts varargs for convenience
  * in invocation.
  * 
- * @see #to(Iterable)
+ * @see #from(Iterable)
  * @see #to(Object...)
  * 
  * @param <In>
@@ -75,7 +74,7 @@ public class CollectionTransformer<In, Out> implements ETransformer<Iterable<In>
 	public EList<Out> to(In... in) {
 		EList<Out> result = new EListImpl<Out>(new ArrayList<Out>(in.length));
 		for (In entry : in) {
-			result.add(transformer.to(entry));
+			result.add(transformer.from(entry));
 		}
 		return result;
 	}
@@ -86,10 +85,10 @@ public class CollectionTransformer<In, Out> implements ETransformer<Iterable<In>
 	 * @return an {@link EList} containing the transformed objects for the given
 	 *         {@link Iterable} in the same order as they are supplied
 	 */
-	public EList<Out> to(Iterable<In> in) {
+	public EList<Out> from(Iterable<In> in) {
 		EList<Out> result = new EListImpl<Out>();
 		for (In entry : in) {
-			result.add(transformer.to(entry));
+			result.add(transformer.from(entry));
 		}
 		return result;
 	}

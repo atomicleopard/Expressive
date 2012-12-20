@@ -30,11 +30,11 @@ public class EnumFromStringTransformerTest {
 	@Test
 	public void shouldConvertEnumValToStringUsingName() {
 		EnumFromStringTransformer<TestEnum> transformer = new EnumFromStringTransformer<TestEnum>(TestEnum.class);
-		assertThat(transformer.to("TestVal1"), is(TestEnum.TestVal1));
-		assertThat(transformer.to("TestVal2"), is(TestEnum.TestVal2));
-		assertThat(transformer.to(null), is(nullValue()));
-		assertThat(transformer.to("testVal2"), is(nullValue()));
-		assertThat(transformer.to("junk"), is(nullValue()));
+		assertThat(transformer.from("TestVal1"), is(TestEnum.TestVal1));
+		assertThat(transformer.from("TestVal2"), is(TestEnum.TestVal2));
+		assertThat(transformer.from(null), is(nullValue()));
+		assertThat(transformer.from("testVal2"), is(nullValue()));
+		assertThat(transformer.from("junk"), is(nullValue()));
 	}
 
 	public static enum TestEnum {

@@ -34,17 +34,17 @@ public class BeanPropertyTransformerTest {
 	@Test
 	public void shouldTransformToPropertyValueWhenClassIsDeterminedOnTheFly() {
 		BeanPropertyTransformer<TestBean, String> propertyTransformer = new BeanPropertyTransformer<TestBean, String>("named");
-		assertThat(propertyTransformer.to(new TestBean(1, "one")), is("one"));
-		assertThat(propertyTransformer.to(new TestBean(2, "two")), is("two"));
-		assertThat(propertyTransformer.to(new TestBean(3, null)), is(nullValue()));
-		assertThat(propertyTransformer.to(null), is(nullValue()));
+		assertThat(propertyTransformer.from(new TestBean(1, "one")), is("one"));
+		assertThat(propertyTransformer.from(new TestBean(2, "two")), is("two"));
+		assertThat(propertyTransformer.from(new TestBean(3, null)), is(nullValue()));
+		assertThat(propertyTransformer.from(null), is(nullValue()));
 	}
 
 	@Test
 	public void shouldTransformToPropertyValueWhenValueIsBasicTypeWhenClassIsDeterminedOnTheFly() {
 		BeanPropertyTransformer<TestBean, Integer> propertyTransformer = new BeanPropertyTransformer<TestBean, Integer>("pk");
-		assertThat(propertyTransformer.to(new TestBean(1, "one")), is(1));
-		assertThat(propertyTransformer.to(new TestBean(2, "two")), is(2));
+		assertThat(propertyTransformer.from(new TestBean(1, "one")), is(1));
+		assertThat(propertyTransformer.from(new TestBean(2, "two")), is(2));
 	}
 
 	@Test
@@ -52,23 +52,23 @@ public class BeanPropertyTransformerTest {
 		thrown.expect(RuntimeException.class);
 		thrown.expectMessage("There is no accessible property named 'somethingElse'");
 		BeanPropertyTransformer<TestBean, Integer> propertyTransformer = new BeanPropertyTransformer<TestBean, Integer>("somethingElse");
-		assertThat(propertyTransformer.to(new TestBean(4, "four")), is(4));
+		assertThat(propertyTransformer.from(new TestBean(4, "four")), is(4));
 	}
 
 	@Test
 	public void shouldTransformToPropertyValue() {
 		BeanPropertyTransformer<TestBean, String> propertyTransformer = new BeanPropertyTransformer<TestBean, String>(TestBean.class, "named");
-		assertThat(propertyTransformer.to(new TestBean(1, "one")), is("one"));
-		assertThat(propertyTransformer.to(new TestBean(2, "two")), is("two"));
-		assertThat(propertyTransformer.to(new TestBean(3, null)), is(nullValue()));
-		assertThat(propertyTransformer.to(null), is(nullValue()));
+		assertThat(propertyTransformer.from(new TestBean(1, "one")), is("one"));
+		assertThat(propertyTransformer.from(new TestBean(2, "two")), is("two"));
+		assertThat(propertyTransformer.from(new TestBean(3, null)), is(nullValue()));
+		assertThat(propertyTransformer.from(null), is(nullValue()));
 	}
 
 	@Test
 	public void shouldTransformToPropertyValueWhenValueIsBasicType() {
 		BeanPropertyTransformer<TestBean, Integer> propertyTransformer = new BeanPropertyTransformer<TestBean, Integer>(TestBean.class, "pk");
-		assertThat(propertyTransformer.to(new TestBean(1, "one")), is(1));
-		assertThat(propertyTransformer.to(new TestBean(2, "two")), is(2));
+		assertThat(propertyTransformer.from(new TestBean(1, "one")), is(1));
+		assertThat(propertyTransformer.from(new TestBean(2, "two")), is(2));
 
 	}
 

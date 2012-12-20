@@ -24,7 +24,7 @@ import com.atomicleopard.expressive.ETransformer;
 
 public class EnumToStringTransformer<EnumType extends Enum<EnumType>> implements ETransformer<EnumType, String> {
 	@Override
-	public String to(EnumType enumType) {
+	public String from(EnumType enumType) {
 		return enumType == null ? null : enumType.name();
 	}
 }

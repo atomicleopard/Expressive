@@ -30,7 +30,7 @@ public class EnumFromStringTransformer<From extends Enum<From>> implements ETran
 	}
 
 	@Override
-	public From to(String string) {
+	public From from(String string) {
 		try {
 			return string == null ? null : Enum.valueOf(type, string);
 		} catch (IllegalArgumentException e) {

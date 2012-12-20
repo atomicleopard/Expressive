@@ -31,7 +31,7 @@ public class BeanPropertyTransformer<V, K> extends BaseBeanPropertyTransformer<V
 		super(clazz, propertyName);
 	}
 
-	public K to(V from) {
+	public K from(V from) {
 		return from != null ? super.<K> getPropertyValue(from, getReadMethod(from)) : null;
 	}
 }

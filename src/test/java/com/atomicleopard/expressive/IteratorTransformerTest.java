@@ -39,7 +39,7 @@ public class IteratorTransformerTest {
 	@Test
 	public void shouldTransformIterator() {
 		ETransformer<Integer, String> transformer = new ETransformer<Integer, String>() {
-			public String to(Integer in) {
+			public String from(Integer in) {
 				return in.toString();
 			}
 		};
@@ -56,7 +56,7 @@ public class IteratorTransformerTest {
 	@Test
 	public void shouldAllowRemoveOnIteratorsThatSupportRemove() {
 		ETransformer<Integer, String> transformer = new ETransformer<Integer, String>() {
-			public String to(Integer in) {
+			public String from(Integer in) {
 				return in.toString();
 			}
 		};
@@ -79,7 +79,7 @@ public class IteratorTransformerTest {
 	public void shouldThrowExceptionOnRemoveOnIteratorsThatDoesntSupportRemove() {
 		thrown.expect(UnsupportedOperationException.class);
 		ETransformer<Integer, String> transformer = new ETransformer<Integer, String>() {
-			public String to(Integer in) {
+			public String from(Integer in) {
 				return in.toString();
 			}
 		};

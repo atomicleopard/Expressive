@@ -90,7 +90,7 @@ public class PredicateBuilder<T> implements EPredicate<T> {
 		Map<String, PropertyDescriptor> existing = noCache ? null : PropertyDescriptorCache.get(type);
 		if (existing == null) {
 			PropertyDescriptor[] getters = ReflectUtils.getBeanGetters(type);
-			existing = PropertyDescriptorLookupTransformer.to(Arrays.asList(getters));
+			existing = PropertyDescriptorLookupTransformer.from(Arrays.asList(getters));
 			if (!noCache) {
 				PropertyDescriptorCache.put(type, existing);
 			}

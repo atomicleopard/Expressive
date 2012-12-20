@@ -26,11 +26,12 @@ import java.util.Map;
 
 import com.atomicleopard.expressive.ETransformer;
 import com.atomicleopard.expressive.Expressive;
-import com.atomicleopard.expressive.Expressive.Transformers;
 
 /**
- * This interface is superseded by {@link Transformers}. Prefer those methods over these.
- * This will become deprecated in a future release.
+ * This interface is superseded by {@link Expressive.Transformers}. Prefer those methods over these.
+ * 
+ * @deprecated 
+ * @see Expressive.Transformers
  */
 public class ETransformers {
 	ETransformers() {
@@ -42,7 +43,7 @@ public class ETransformers {
 	 * given lookup map.
 	 * </p>
 	 * <p>
-	 * If {@link ETransformer#to(Object)} is invoked with a value which is not a key in the map, null will be returned.
+	 * If {@link ETransformer#from(Object)} is invoked with a value which is not a key in the map, null will be returned.
 	 * </p>
 	 * 
 	 * @see Expressive.Transformers#usingLookup(Map)

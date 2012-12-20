@@ -41,19 +41,19 @@ package com.atomicleopard.expressive;
  * {@link EBidiTransformer} should be used.
  * </p>
  * 
- * @param <A>
- * @param <B>
+ * @param <From>
+ * @param <To>
  * 
  * @see EBidiTransformer
  * @see CollectionTransformer
  * @see IteratorTransformer
  */
-public interface ETransformer<A, B> {
+public interface ETransformer<From, To> {
 	/**
 	 * Defines a transformation from one object to another.
 	 * 
 	 * @param from
 	 * @return
 	 */
-	public B to(A from);
+	public To from(From from);
 }

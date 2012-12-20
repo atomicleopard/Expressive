@@ -51,7 +51,7 @@ public class IteratorTransformer<In, Out> implements Iterator<Out> {
 	}
 
 	public Out next() {
-		return transformer.to(iterator.next());
+		return transformer.from(iterator.next());
 	}
 
 	public void remove() {

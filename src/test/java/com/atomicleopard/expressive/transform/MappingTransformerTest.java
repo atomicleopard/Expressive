@@ -33,11 +33,11 @@ public class MappingTransformerTest {
 	public void shouldTransformUsingLookup() {
 		Map<String, Integer> lookup = mapKeys("one", "two", "three").to(1, 2, 3);
 		MappingTransformer<String, Integer> transformer = new MappingTransformer<String, Integer>(lookup);
-		assertThat(transformer.to("one"), is(1));
-		assertThat(transformer.to("two"), is(2));
-		assertThat(transformer.to("three"), is(3));
-		assertThat(transformer.to("four"), is(nullValue()));
-		assertThat(transformer.to(null), is(nullValue()));
+		assertThat(transformer.from("one"), is(1));
+		assertThat(transformer.from("two"), is(2));
+		assertThat(transformer.from("three"), is(3));
+		assertThat(transformer.from("four"), is(nullValue()));
+		assertThat(transformer.from(null), is(nullValue()));
 	}
 
 }

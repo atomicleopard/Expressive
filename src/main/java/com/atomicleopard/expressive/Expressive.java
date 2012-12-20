@@ -797,7 +797,7 @@ public class Expressive {
 		 * the given lookup map.
 		 * </p>
 		 * <p>
-		 * If {@link ETransformer#to(Object)} is invoked with a value which is not a key in the map, null will be returned.
+		 * If {@link ETransformer#from(Object)} is invoked with a value which is not a key in the map, null will be returned.
 		 * </p>
 		 */
 		public static <From, To> ETransformer<From, To> usingLookup(Map<From, To> lookup) {

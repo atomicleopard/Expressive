@@ -53,14 +53,14 @@ public class BeanPropertyLookupTransformerTest {
 
 	@Test
 	public void shouldReturnEmptyCollectionForNullAndEmptyInput() {
-		assertThat(namedTransformer.to(null).isEmpty(), is(true));
-		assertThat(namedTransformer.to(Collections.<TestBean> emptySet()).isEmpty(), is(true));
-		assertThat(namedTransformer.to(Collections.<TestBean> emptyList()).isEmpty(), is(true));
+		assertThat(namedTransformer.from(null).isEmpty(), is(true));
+		assertThat(namedTransformer.from(Collections.<TestBean> emptySet()).isEmpty(), is(true));
+		assertThat(namedTransformer.from(Collections.<TestBean> emptyList()).isEmpty(), is(true));
 	}
 
 	@Test
 	public void shouldCreateLookupMapForBeansFromProperty() {
-		Map<String, List<TestBean>> map = namedTransformer.to(Arrays.asList(testBean1, testBean2, testBean3, testBean3Again));
+		Map<String, List<TestBean>> map = namedTransformer.from(Arrays.asList(testBean1, testBean2, testBean3, testBean3Again));
 
 		assertThat(map.get("one"), hasItems(testBean1));
 		assertThat(map.get("two"), hasItems(testBean2));
@@ -70,7 +70,7 @@ public class BeanPropertyLookupTransformerTest {
 
 	@Test
 	public void shouldCreateLookupMapForBeansFromPropertyThatsTheId() {
-		Map<String, List<TestBean>> map = pkTransformer.to(Arrays.asList(testBean1, testBean2, testBean3, testBean3Again));
+		Map<String, List<TestBean>> map = pkTransformer.from(Arrays.asList(testBean1, testBean2, testBean3, testBean3Again));
 
 		assertThat(map.get(1), hasItems(testBean1));
 		assertThat(map.get(2), hasItems(testBean2));
@@ -89,7 +89,7 @@ public class BeanPropertyLookupTransformerTest {
 
 	@Test
 	public void shouldntRetainOrderOfUnorderedCollection() {
-		Map<String, List<TestBean>> map = namedTransformer.to(Arrays.asList(testBean1, testBean2, testBean3, testBean3Again));
+		Map<String, List<TestBean>> map = namedTransformer.from(Arrays.asList(testBean1, testBean2, testBean3, testBean3Again));
 		assertThat(map.size(), not(is(LinkedHashMap.class)));
 	}
 
@@ -103,7 +103,7 @@ public class BeanPropertyLookupTransformerTest {
 	@Test
 	public void shouldCreateLookupMapForBeansFromPropertyWhenClassIsPassedToCtor() {
 		namedTransformer = new BeanPropertyLookupTransformer<TestBean, String>(TestBean.class, "named");
-		Map<String, List<TestBean>> map = namedTransformer.to(Arrays.asList(testBean1, testBean2, testBean3, testBean3Again));
+		Map<String, List<TestBean>> map = namedTransformer.from(Arrays.asList(testBean1, testBean2, testBean3, testBean3Again));
 
 		assertThat(map.get("one"), hasItems(testBean1));
 		assertThat(map.get("two"), hasItems(testBean2));
@@ -116,11 +116,11 @@ public class BeanPropertyLookupTransformerTest {
 		thrown.expect(RuntimeException.class);
 		thrown.expectMessage("Failed to transform a Collection to a lookup Map using property 'anException'");
 		BeanPropertyLookupTransformer<TestBean, String> transformer = new BeanPropertyLookupTransformer<TestBean, String>(TestBean.class, "anException");
-		transformer.to(list(new TestBean(1, "named")));
+		transformer.from(list(new TestBean(1, "named")));
 	}
 
 	private void verifyOrderIsMaintained(BeanPropertyLookupTransformer<TestBean, String> beanPropertyLookupTransformer, Collection<TestBean> beans) {
-		Map<String, List<TestBean>> map = beanPropertyLookupTransformer.to(beans);
+		Map<String, List<TestBean>> map = beanPropertyLookupTransformer.from(beans);
 
 		assertThat(map.size(), is(3));
 		Set<String> keySet = map.keySet();

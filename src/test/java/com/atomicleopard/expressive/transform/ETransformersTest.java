@@ -38,22 +38,22 @@ public class ETransformersTest {
 	public void shouldTransformUsingLookup() {
 		Map<Integer, String> map = map(1, "one", 2, "two", 3, "three");
 		ETransformer<Integer, String> transformer = ETransformers.usingLookup(map);
-		assertThat(transformer.to(1), is("one"));
-		assertThat(transformer.to(2), is("two"));
-		assertThat(transformer.to(3), is("three"));
-		assertThat(transformer.to(4), is(nullValue()));
+		assertThat(transformer.from(1), is("one"));
+		assertThat(transformer.from(2), is("two"));
+		assertThat(transformer.from(3), is("three"));
+		assertThat(transformer.from(4), is(nullValue()));
 	}
 
 	@Test
 	public void shouldReturnATransformerToMapBeanProperties() {
 		ETransformer<TestBean, Integer> transformer = ETransformers.toProperty("pk");
-		assertThat(transformer.to(new TestBean(1, "one")), is(1));
+		assertThat(transformer.from(new TestBean(1, "one")), is(1));
 	}
 
 	@Test
 	public void shouldReturnATransformerToMapBeanPropertiesForASpecificClass() {
 		ETransformer<TestBean, String> transformer = ETransformers.toProperty("named", TestBean.class);
-		assertThat(transformer.to(new TestBean(1, "one")), is("one"));
+		assertThat(transformer.from(new TestBean(1, "one")), is("one"));
 	}
 
 	@Test
@@ -62,7 +62,7 @@ public class ETransformersTest {
 		TestBean first = new TestBean(1, "one");
 		TestBean second = new TestBean(1, "one");
 		TestBean third = new TestBean(2, "two");
-		Map<String, List<TestBean>> map = transformer.to(list(first, second, third));
+		Map<String, List<TestBean>> map = transformer.from(list(first, second, third));
 		assertThat(map.get(1), hasItems(first, second));
 		assertThat(map.get(2), hasItems(third));
 	}
@@ -73,7 +73,7 @@ public class ETransformersTest {
 		TestBean first = new TestBean(1, "one");
 		TestBean second = new TestBean(1, "one");
 		TestBean third = new TestBean(2, "two");
-		Map<String, List<TestBean>> map = transformer.to(list(first, second, third));
+		Map<String, List<TestBean>> map = transformer.from(list(first, second, third));
 		assertThat(map.get("one"), hasItems(first, second));
 		assertThat(map.get("two"), hasItems(third));
 	}
@@ -84,7 +84,7 @@ public class ETransformersTest {
 		TestBean first = new TestBean(1, "one");
 		TestBean second = new TestBean(1, "one");
 		TestBean third = new TestBean(2, "two");
-		Map<String, TestBean> map = transformer.to(list(first, second, third));
+		Map<String, TestBean> map = transformer.from(list(first, second, third));
 		assertThat(map.get(1), is(second));
 		assertThat(map.get(2), is(third));
 	}
@@ -95,7 +95,7 @@ public class ETransformersTest {
 		TestBean first = new TestBean(1, "one");
 		TestBean second = new TestBean(1, "one");
 		TestBean third = new TestBean(2, "two");
-		Map<String, TestBean> map = transformer.to(list(first, second, third));
+		Map<String, TestBean> map = transformer.from(list(first, second, third));
 		assertThat(map.get("one"), is(second));
 		assertThat(map.get("two"), is(third));
 	}

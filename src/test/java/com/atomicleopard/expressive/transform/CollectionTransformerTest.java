@@ -46,7 +46,7 @@ public class CollectionTransformerTest {
 	@Before
 	public void before() {
 		simpleTransformer = new ETransformer<Integer, String>() {
-			public String to(Integer in) {
+			public String from(Integer in) {
 				return in.toString();
 			}
 		};
@@ -70,7 +70,7 @@ public class CollectionTransformerTest {
 		CollectionTransformer<Integer, String> transformer = new CollectionTransformer<Integer, String>(simpleTransformer);
 
 		List<Integer> input = Arrays.asList(1, 1, 2, 3);
-		List<String> output = transformer.to(input);
+		List<String> output = transformer.from(input);
 		assertThat(output.size(), is(4));
 		assertThat(output.get(0), is("1"));
 		assertThat(output.get(1), is("1"));
@@ -85,7 +85,7 @@ public class CollectionTransformerTest {
 		input.add(1);
 		input.add(2);
 		input.add(3);
-		List<String> output = transformer.to(input);
+		List<String> output = transformer.from(input);
 		assertThat(output.size(), is(3));
 		assertThat(output, hasItems("1", "2", "3"));
 	}

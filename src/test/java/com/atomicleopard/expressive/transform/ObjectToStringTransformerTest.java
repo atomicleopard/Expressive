@@ -30,18 +30,18 @@ public class ObjectToStringTransformerTest {
 	@Test
 	public void shouldConvertObjectToString() {
 		ObjectToStringTransformer<Integer> transformer = new ObjectToStringTransformer<Integer>();
-		assertThat(transformer.to(123), is("123"));
-		assertThat(transformer.to(456), is("456"));
-		assertThat(transformer.to(null), is(nullValue()));
+		assertThat(transformer.from(123), is("123"));
+		assertThat(transformer.from(456), is("456"));
+		assertThat(transformer.from(null), is(nullValue()));
 	}
 
 	@Test
 	public void shouldConvertDifferentObjectToString() {
 
 		ObjectToStringTransformer<String> transformer = new ObjectToStringTransformer<String>();
-		assertThat(transformer.to("String"), is("String"));
-		assertThat(transformer.to("any text at all"), is("any text at all"));
-		assertThat(transformer.to(null), is(nullValue()));
+		assertThat(transformer.from("String"), is("String"));
+		assertThat(transformer.from("any text at all"), is("any text at all"));
+		assertThat(transformer.from(null), is(nullValue()));
 	}
 
 }

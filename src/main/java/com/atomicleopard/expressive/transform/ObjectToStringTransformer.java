@@ -28,7 +28,7 @@ import com.atomicleopard.expressive.ETransformer;
  */
 public class ObjectToStringTransformer<T> implements ETransformer<T, String> {
 	@Override
-	public String to(T instance) {
+	public String from(T instance) {
 		return instance == null ? null : instance.toString();
 	}
 }
