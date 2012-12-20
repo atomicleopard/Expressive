@@ -136,8 +136,9 @@ public class ComparatorBuilder<T> implements Comparator<T> {
 			return copyAndAdd(property, propertyComparator);
 		}
 
-		public <C extends Comparable<C>> ComparatorBuilder<T> naturally() {
-			return copyAndAdd(property, new ComparableComparator<C>());
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		public ComparatorBuilder<T> naturally() {
+			return copyAndAdd(property, new ComparableComparator());
 		}
 	}
 }
