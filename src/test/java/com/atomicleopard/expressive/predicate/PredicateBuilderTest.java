@@ -29,7 +29,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.atomicleopard.expressive.Expressive.Predicate;
-import com.atomicleopard.expressive.predicate.PredicateBuilder;
 
 public class PredicateBuilderTest {
 	@Rule

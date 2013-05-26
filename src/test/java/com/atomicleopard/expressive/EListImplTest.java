@@ -392,19 +392,22 @@ public class EListImplTest {
 
 		list.clear();
 		verify(elist.delegate).clear();
+	}
 
-		// these guys are called by previous methods internally,
-		verify(elist.delegate, times(1)).indexOf("C");
+	@Test
+	public void shouldDelegateAllListOperationsToDelegate2() {
+		EListImpl<String> elist = new EListImpl<String>();
+		elist.delegate = spy(elist.delegate);
+		List<String> list = elist;
+
 		list.indexOf("C");
-		verify(elist.delegate, times(2)).indexOf("C");
+		verify(elist.delegate, times(1)).indexOf("C");
 
-		verify(elist.delegate, times(7)).size();
 		list.size();
-		verify(elist.delegate, times(8)).size();
+		verify(elist.delegate, times(1)).size();
 
-		verify(elist.delegate, times(1)).listIterator(0);
 		list.listIterator(0);
-		verify(elist.delegate, times(2)).listIterator(0);
+		verify(elist.delegate, times(1)).listIterator(0);
 	}
 
 	@Test

@@ -25,10 +25,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.atomicleopard.expressive.predicate.ConstantPredicate;
-import com.atomicleopard.expressive.predicate.EPredicate;
-import com.atomicleopard.expressive.predicate.NotPredicate;
-
 public class InversePredicateTest {
 	private EPredicate<String> returnsTrue = new ConstantPredicate<String>(true);
 	private EPredicate<String> returnsFalse = new ConstantPredicate<String>(false);

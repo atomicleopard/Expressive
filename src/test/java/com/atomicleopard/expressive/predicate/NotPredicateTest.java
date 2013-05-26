@@ -28,8 +28,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.atomicleopard.expressive.Expressive.Predicate;
-import com.atomicleopard.expressive.predicate.ConstantPredicate;
-import com.atomicleopard.expressive.predicate.NotPredicate;
 
 public class NotPredicateTest {
 	@Rule

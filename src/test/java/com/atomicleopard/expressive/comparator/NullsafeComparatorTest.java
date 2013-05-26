@@ -41,57 +41,57 @@ public class NullsafeComparatorTest {
 
 	@Test
 	public void shouldReturnMinusOneWhenFirstIsNullWhenNullFirst() {
-		assertThat(nullFirst().compare(null, new Object()), is(-1));
+		assertThat(nullFirst().compare(null, "string"), is(-1));
 	}
 
 	@Test
 	public void shouldReturnOneWhenFirstIsNullWhenNullLast() {
-		assertThat(nullLast().compare(null, new Object()), is(1));
+		assertThat(nullLast().compare(null, "string"), is(1));
 	}
 
 	@Test
 	public void shouldReturnOneWhenSecondsNullWhenNullFirst() {
-		assertThat(nullFirst().compare(new Object(), null), is(1));
+		assertThat(nullFirst().compare("string", null), is(1));
 	}
 
 	@Test
 	public void shouldReturnMinusOneWhenSecondIsNullWhenNullLast() {
-		assertThat(nullLast().compare(new Object(), null), is(-1));
+		assertThat(nullLast().compare("string", null), is(-1));
 	}
 
 	@Test
 	public void shouldDelegateToGivenComparatorWhenNeitherNull() {
 		NullsafeComparator<Object> comparator = new NullsafeComparator<Object>(new ConstantComparator<Object>(11), true);
-		assertThat(comparator.compare(new Object(), new Object()), is(11));
+		assertThat(comparator.compare("str1", "str2"), is(11));
 	}
 
 	@Test
 	public void shouldGiveExpectedResultsWhenSorting() {
-		Object o1 = new Object();
-		Object o2 = new Object();
-
-		assertThat(sorted(list(null, null), nullFirst()), is(list(null, null)));
+		String o1 = "String1";
+		String o2 = "String2";
+		String nullString = null;
+		assertThat(sorted(list(nullString, nullString), nullFirst()), is(list(nullString, nullString)));
 		assertThat(sorted(list(null, o1), nullFirst()), is(list(null, o1)));
 		assertThat(sorted(list(o1, null), nullFirst()), is(list(null, o1)));
-		assertThat(sorted(list(o1, o2), nullFirst()), is(list(o2, o1)));
+		assertThat(sorted(list(o1, o2), nullFirst()), is(list(o1, o2)));
 
-		assertThat(sorted(list(null, null), nullLast()), is(list(null, null)));
+		assertThat(sorted(list(nullString, nullString), nullLast()), is(list(nullString, nullString)));
 		assertThat(sorted(list(null, o1), nullLast()), is(list(o1, null)));
 		assertThat(sorted(list(o1, null), nullLast()), is(list(o1, null)));
-		assertThat(sorted(list(o1, o2), nullLast()), is(list(o2, o1)));
+		assertThat(sorted(list(o1, o2), nullLast()), is(list(o1, o2)));
 
 	}
 
-	private EList<Object> sorted(EList<Object> list, Comparator<Object> comparator) {
+	private EList<String> sorted(EList<String> list, Comparator<String> comparator) {
 		Collections.sort(list, comparator);
 		return list;
 	}
 
-	private NullsafeComparator<Object> nullLast() {
-		return new NullsafeComparator<Object>(new ConstantComparator<Object>(1), false);
+	private NullsafeComparator<String> nullLast() {
+		return new NullsafeComparator<String>(String.CASE_INSENSITIVE_ORDER, false);
 	}
 
-	private NullsafeComparator<Object> nullFirst() {
-		return new NullsafeComparator<Object>(new ConstantComparator<Object>(1), true);
+	private NullsafeComparator<String> nullFirst() {
+		return new NullsafeComparator<String>(String.CASE_INSENSITIVE_ORDER, true);
 	}
 }

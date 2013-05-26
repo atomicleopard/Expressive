@@ -30,9 +30,6 @@ import org.junit.Test;
 
 import com.atomicleopard.expressive.Expressive;
 import com.atomicleopard.expressive.Expressive.Predicate;
-import com.atomicleopard.expressive.predicate.AllOfPredicate;
-import com.atomicleopard.expressive.predicate.ConstantPredicate;
-import com.atomicleopard.expressive.predicate.EPredicate;
 
 public class AllOfPredicateTest {
 	@SuppressWarnings("unchecked")

@@ -57,7 +57,7 @@ public class CollectionTransformerTest {
 		CollectionTransformer<Integer, String> transformer = new CollectionTransformer<Integer, String>(simpleTransformer);
 
 		Integer[] input = new Integer[] { 1, 1, 2, 3 };
-		EList<String> output = transformer.to(input);
+		EList<String> output = transformer.from(input);
 		assertThat(output.size(), is(4));
 		assertThat(output.get(0), is("1"));
 		assertThat(output.get(1), is("1"));
@@ -88,6 +88,17 @@ public class CollectionTransformerTest {
 		List<String> output = transformer.from(input);
 		assertThat(output.size(), is(3));
 		assertThat(output, hasItems("1", "2", "3"));
+	}
+
+	@Test
+	public void shouldReturnEmptyListWhenGivenANull() {
+		CollectionTransformer<Integer, String> transformer = new CollectionTransformer<Integer, String>(simpleTransformer);
+		assertThat(transformer.from((Integer[]) null), is(notNullValue()));
+		assertThat(transformer.from((Integer[]) null).size(), is(0));
+
+		assertThat(transformer.from((Iterable<Integer>) null), is(notNullValue()));
+		assertThat(transformer.from((Iterable<Integer>) null).size(), is(0));
+
 	}
 
 }

@@ -114,13 +114,13 @@ public class ExpressiveTransformersTest {
 	public void shouldTransformACollectionUsingAGivenTransformer() {
 		com.atomicleopard.expressive.transform.CollectionTransformer<TestBean, Integer> transformer = Expressive.Transformers.transformAllUsing(Expressive.Transformers
 				.<TestBean, Integer> toProperty("pk"));
-		assertThat(transformer.to(new TestBean(1, "one"), new TestBean(2, "two")), is(list(1, 2)));
-		assertThat(transformer.to(new TestBean(2, "two"), new TestBean(1, "one")), is(list(2, 1)));
+		assertThat(transformer.from(new TestBean(1, "one"), new TestBean(2, "two")), is(list(1, 2)));
+		assertThat(transformer.from(new TestBean(2, "two"), new TestBean(1, "one")), is(list(2, 1)));
 	}
 
 	@Test
 	public void shouldTransformAnObjectToStringValues() {
-		ETransformer<StringBuilder, String> transformer = Expressive.Transformers.<StringBuilder>toString();
+		ETransformer<StringBuilder, String> transformer = Expressive.Transformers.<StringBuilder>stringify();
 		assertThat(transformer, is(notNullValue()));
 		assertThat(transformer.from(new StringBuilder("expected")), is("expected"));
 		assertThat(transformer.from(null), is(nullValue()));

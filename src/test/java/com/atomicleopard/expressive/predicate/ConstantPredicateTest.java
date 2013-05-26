@@ -25,8 +25,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.atomicleopard.expressive.predicate.ConstantPredicate;
-
 public class ConstantPredicateTest {
 	@Test
 	public void shouldAlwaysReturnTrue() {

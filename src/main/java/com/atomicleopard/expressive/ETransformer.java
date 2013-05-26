@@ -20,6 +20,8 @@
  */
 package com.atomicleopard.expressive;
 
+import com.atomicleopard.expressive.transform.CollectionTransformer;
+
 /**
  * <p>
  * {@link ETransformer} defines a consistent pattern for converting an object of

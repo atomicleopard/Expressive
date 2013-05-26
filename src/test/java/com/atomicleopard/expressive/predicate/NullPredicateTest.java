@@ -25,8 +25,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.atomicleopard.expressive.predicate.NullPredicate;
-
 public class NullPredicateTest {
 	@Test
 	public void shouldPassNull() {

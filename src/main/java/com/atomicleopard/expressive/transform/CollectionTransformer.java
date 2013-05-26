@@ -20,7 +20,7 @@
  */
 package com.atomicleopard.expressive.transform;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.atomicleopard.expressive.EList;
 import com.atomicleopard.expressive.EListImpl;
@@ -31,15 +31,14 @@ import com.atomicleopard.expressive.ETransformer;
  * of objects utilising the {@link ETransformer} pattern.
  * 
  * {@link CollectionTransformer}s are stateless and can be instantiated directly
- * and reused, or for convenience created using the static methods available on
- * {@link ETransformers}.
+ * and reused, or for convenience created using the static methods available on {@link ETransformers}.
  * 
  * On top of the regular {@link #from(Iterable)} override this class offers
- * another method ({@link #to(Object...)} which accepts varargs for convenience
+ * another method ({@link #from(Object...)} which accepts varargs for convenience
  * in invocation.
  * 
  * @see #from(Iterable)
- * @see #to(Object...)
+ * @see #from(Object...)
  * 
  * @param <In>
  * @param <Out>
@@ -50,13 +49,10 @@ public class CollectionTransformer<In, Out> implements ETransformer<Iterable<In>
 
 	/**
 	 * <p>
-	 * Creates a new {@link CollectionTransformer} which can be used to
-	 * transform collections.
+	 * Creates a new {@link CollectionTransformer} which can be used to transform collections.
 	 * </p>
 	 * <p>
-	 * Reverse transformations, that is using the {@link #from(Iterable)} and
-	 * {@link #from(Object...)} methods will only work if the given
-	 * {@link ETransformer} is an {@link EBidiTransformer}.
+	 * Reverse transformations, that is using the {@link #from(Iterable)} and {@link #from(Object...)} methods will only work if the given {@link ETransformer} is an {@link EBidiTransformer}.
 	 * </p>
 	 * 
 	 * @param transformer
@@ -71,24 +67,21 @@ public class CollectionTransformer<In, Out> implements ETransformer<Iterable<In>
 	 * @return an {@link EList} containing the transformed objects for the given
 	 *         in parameters in the same order as they are supplied
 	 */
-	public EList<Out> to(In... in) {
-		EList<Out> result = new EListImpl<Out>(new ArrayList<Out>(in.length));
-		for (In entry : in) {
-			result.add(transformer.from(entry));
-		}
-		return result;
+	public EList<Out> from(In... in) {
+		return in == null ? new EListImpl<Out>() : from(Arrays.asList(in));
 	}
 
 	/**
 	 * @param in
 	 *            values to transform
-	 * @return an {@link EList} containing the transformed objects for the given
-	 *         {@link Iterable} in the same order as they are supplied
+	 * @return an {@link EList} containing the transformed objects for the given {@link Iterable} in the same order as they are supplied
 	 */
 	public EList<Out> from(Iterable<In> in) {
 		EList<Out> result = new EListImpl<Out>();
-		for (In entry : in) {
-			result.add(transformer.from(entry));
+		if (in != null) {
+			for (In entry : in) {
+				result.add(transformer.from(entry));
+			}
 		}
 		return result;
 	}

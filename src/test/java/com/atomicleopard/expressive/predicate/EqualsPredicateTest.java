@@ -31,8 +31,6 @@ import java.net.URL;
 import org.junit.Test;
 
 import com.atomicleopard.expressive.EList;
-import com.atomicleopard.expressive.predicate.EPredicate;
-import com.atomicleopard.expressive.predicate.EqualsPredicate;
 
 public class EqualsPredicateTest {
 	@Test

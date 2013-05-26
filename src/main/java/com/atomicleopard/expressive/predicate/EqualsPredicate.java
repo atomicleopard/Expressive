@@ -51,7 +51,7 @@ public class EqualsPredicate<T> implements EPredicate<T> {
 	}
 
 	public static <T> EList<EPredicate<T>> asPredicates(T... values) {
-		return EqualsPredicate.Transformer.<T> ForValues().to(values);
+		return EqualsPredicate.Transformer.<T> ForValues().from(values);
 	}
 
 	public static <T> EList<EPredicate<T>> asPredicates(List<T> values) {

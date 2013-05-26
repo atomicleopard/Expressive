@@ -261,7 +261,7 @@ public class ExpressiveTest {
 
 	@Test
 	public void shouldReturnTrueForEmptyCollectionOrNull() {
-		assertThat(Expressive.isEmpty(null), is(true));
+		assertThat(Expressive.isEmpty((Collection<Object>) null), is(true));
 		assertThat(Expressive.isEmpty(list()), is(true));
 		assertThat(Expressive.isEmpty(list("A")), is(false));
 		assertThat(Expressive.isEmpty(Expressive.list((String) null)), is(false));
@@ -269,7 +269,7 @@ public class ExpressiveTest {
 
 	@Test
 	public void shouldReturnTrueForANonEmptyCollectionOrNull() {
-		assertThat(Expressive.isNotEmpty(null), is(false));
+		assertThat(Expressive.isNotEmpty((Collection<Object>) null), is(false));
 		assertThat(Expressive.isNotEmpty(list()), is(false));
 		assertThat(Expressive.isNotEmpty(list("A")), is(true));
 		assertThat(Expressive.isNotEmpty(Expressive.list((String) null)), is(true));
@@ -280,7 +280,7 @@ public class ExpressiveTest {
 		Iterable<String> emptyIterable = list();
 		Iterable<String> nonEmptyIterable = list("A");
 		Iterable<String> nonEmptyIterableWithNull = list((String) null);
-		assertThat(Expressive.isEmpty((Iterable<String>)null), is(true));
+		assertThat(Expressive.isEmpty((Iterable<String>) null), is(true));
 		assertThat(Expressive.isEmpty(emptyIterable), is(true));
 		assertThat(Expressive.isEmpty(nonEmptyIterable), is(false));
 		assertThat(Expressive.isEmpty(nonEmptyIterableWithNull), is(false));
@@ -291,10 +291,26 @@ public class ExpressiveTest {
 		Iterable<String> emptyIterable = list();
 		Iterable<String> nonEmptyIterable = list("A");
 		Iterable<String> nonEmptyIterableWithNull = list((String) null);
-		assertThat(Expressive.isNotEmpty((Iterable<String>)null), is(false));
+		assertThat(Expressive.isNotEmpty((Iterable<String>) null), is(false));
 		assertThat(Expressive.isNotEmpty(emptyIterable), is(false));
 		assertThat(Expressive.isNotEmpty(nonEmptyIterable), is(true));
 		assertThat(Expressive.isNotEmpty(nonEmptyIterableWithNull), is(true));
+	}
+
+	@Test
+	public void shouldReturnTrueForEmptyMapOrNull() {
+		assertThat(Expressive.isEmpty((Map<Object, Object>) null), is(true));
+		assertThat(Expressive.isEmpty(map()), is(true));
+		assertThat(Expressive.isEmpty(map("A", "A")), is(false));
+		assertThat(Expressive.isEmpty(map(null, null)), is(false));
+	}
+
+	@Test
+	public void shouldReturnTrueForANonEmptyMapOrNull() {
+		assertThat(Expressive.isNotEmpty((Map<Object, Object>) null), is(false));
+		assertThat(Expressive.isNotEmpty(map()), is(false));
+		assertThat(Expressive.isNotEmpty(map("A", "A")), is(true));
+		assertThat(Expressive.isNotEmpty(map(null, null)), is(true));
 	}
 
 	@Test

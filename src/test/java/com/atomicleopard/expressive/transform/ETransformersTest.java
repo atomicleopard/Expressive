@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import com.atomicleopard.expressive.ETransformer;
 
+@SuppressWarnings("deprecation")
 public class ETransformersTest {
 
 	@Test
@@ -109,7 +110,7 @@ public class ETransformersTest {
 	@Test
 	public void shouldTransformACollectionUsingAGivenTransformer() {
 		CollectionTransformer<TestBean, Integer> transformer = ETransformers.transformAllUsing(ETransformers.<TestBean, Integer> toProperty("pk"));
-		assertThat(transformer.to(new TestBean(1, "one"), new TestBean(2, "two")), is(list(1, 2)));
-		assertThat(transformer.to(new TestBean(2, "two"), new TestBean(1, "one")), is(list(2, 1)));
+		assertThat(transformer.from(new TestBean(1, "one"), new TestBean(2, "two")), is(list(1, 2)));
+		assertThat(transformer.from(new TestBean(2, "two"), new TestBean(1, "one")), is(list(2, 1)));
 	}
 }

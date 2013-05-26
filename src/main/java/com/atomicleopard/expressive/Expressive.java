@@ -55,6 +55,7 @@ import com.atomicleopard.expressive.predicate.NullPredicate;
 import com.atomicleopard.expressive.predicate.PredicateBuilder;
 import com.atomicleopard.expressive.transform.BeanPropertyLookupTransformer;
 import com.atomicleopard.expressive.transform.BeanPropertyTransformer;
+import com.atomicleopard.expressive.transform.CastTransformer;
 import com.atomicleopard.expressive.transform.CollectionTransformer;
 import com.atomicleopard.expressive.transform.EnumFromStringTransformer;
 import com.atomicleopard.expressive.transform.EnumToStringTransformer;
@@ -411,6 +412,16 @@ public class Expressive {
 	}
 
 	/**
+	 * Returns true if the given {@link Map} is empty or null
+	 * 
+	 * @param map a map, or null
+	 * @return true if the given {@link Map} is empty or null
+	 */
+	public static <K, V> boolean isEmpty(Map<K, V> map) {
+		return map == null ? true : map.isEmpty();
+	}
+
+	/**
 	 * Returns true if the given {@link Iterable} is not null and is not empty
 	 * 
 	 * @param iterable a iterable, or null
@@ -428,6 +439,16 @@ public class Expressive {
 	 */
 	public static <T> boolean isNotEmpty(Collection<T> collection) {
 		return collection == null ? false : !collection.isEmpty();
+	}
+
+	/**
+	 * Returns true if the given {@link Map} is not null empty and is not null
+	 * 
+	 * @param map a map, or null
+	 * @return true if the given {@link Map} is not null and is not empty
+	 */
+	public static <K, V> boolean isNotEmpty(Map<K, V> map) {
+		return map == null ? false : !map.isEmpty();
 	}
 
 	/**
@@ -1028,9 +1049,23 @@ public class Expressive {
 		 * 
 		 * @return an {@link ETransformer} which transforms an object to a string
 		 */
-		public static <T> ETransformer<T, String> toString() {
+		public static <T> ETransformer<T, String> stringify() {
 			return new ObjectToStringTransformer<T>();
 		};
+
+		/**
+		 * <p>
+		 * Returns an {@link ETransformer} that will cast inputs to the specified type.
+		 * </p>
+		 * <p>
+		 * If the returned {@link ETransformer} cannot cast an input, it will return null.
+		 * </p>
+		 * 
+		 * @return an {@link ETransformer} that will cast inputs to the specified type
+		 */
+		public static <From, To> ETransformer<From, To> cast(Class<To> type) {
+			return new CastTransformer<From, To>(type);
+		}
 	}
 
 	/**
