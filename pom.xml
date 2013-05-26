@@ -23,9 +23,9 @@
 		</developer>
 	</developers>
 	<scm>
-		<connection>scm:git:git@github.com:atomicleopard/Expressive.git</connection>
-		<url>scm:git:git@github.com:atomicleopard/Expressive.git</url>
-		<developerConnection>scm:git:git@github.com:atomicleopard/Expressive.git</developerConnection>
+		<connection>scm:git:https://github.com/atomicleopard/Expressive</connection>
+		<developerConnection>scm:git:https://github.com/atomicleopard/Expressive</developerConnection>
+		<url>https://github.com/atomicleopard/Expressive</url>
 	</scm>
 	<licenses>
 		<license>
@@ -49,6 +49,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<gpg.keyname>26463462</gpg.keyname>
 	</properties>
 
 	<dependencies>
