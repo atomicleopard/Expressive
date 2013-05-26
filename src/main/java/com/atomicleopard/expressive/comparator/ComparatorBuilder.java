@@ -32,7 +32,6 @@ import net.sf.cglib.core.ReflectUtils;
 
 import com.atomicleopard.expressive.ETransformer;
 import com.atomicleopard.expressive.Expressive;
-import com.atomicleopard.expressive.transform.ETransformers;
 
 /**
  * <p>
@@ -52,7 +51,7 @@ public class ComparatorBuilder<T> implements Comparator<T> {
 	protected LinkedHashMap<String, Comparator<?>> propertyComparators = new LinkedHashMap<String, Comparator<?>>();
 
 	private static Map<Class<?>, Map<String, PropertyDescriptor>> PropertyDescriptorCache = new HashMap<Class<?>, Map<String, PropertyDescriptor>>();
-	private static ETransformer<Collection<PropertyDescriptor>, Map<String, PropertyDescriptor>> PropertyDescriptorLookupTransformer = ETransformers.toKeyBeanLookup("name", PropertyDescriptor.class);
+	private static ETransformer<Collection<PropertyDescriptor>, Map<String, PropertyDescriptor>> PropertyDescriptorLookupTransformer = Expressive.Transformers.toKeyBeanLookup("name", PropertyDescriptor.class);
 
 	public ComparatorBuilder(Class<T> type) {
 		this(type, false);

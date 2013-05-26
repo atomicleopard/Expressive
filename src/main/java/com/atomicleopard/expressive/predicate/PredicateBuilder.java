@@ -32,7 +32,6 @@ import net.sf.cglib.core.ReflectUtils;
 
 import com.atomicleopard.expressive.ETransformer;
 import com.atomicleopard.expressive.Expressive;
-import com.atomicleopard.expressive.transform.ETransformers;
 
 /**
  * <p>
@@ -51,7 +50,7 @@ public class PredicateBuilder<T> implements EPredicate<T> {
 	protected LinkedHashMap<String, EPredicate<?>> propertyPredicates = new LinkedHashMap<String, EPredicate<?>>();
 
 	private static Map<Class<?>, Map<String, PropertyDescriptor>> PropertyDescriptorCache = new HashMap<Class<?>, Map<String, PropertyDescriptor>>();
-	private static ETransformer<Collection<PropertyDescriptor>, Map<String, PropertyDescriptor>> PropertyDescriptorLookupTransformer = ETransformers.toKeyBeanLookup("name", PropertyDescriptor.class);
+	private static ETransformer<Collection<PropertyDescriptor>, Map<String, PropertyDescriptor>> PropertyDescriptorLookupTransformer = Expressive.Transformers.toKeyBeanLookup("name", PropertyDescriptor.class);
 
 	public PredicateBuilder(Class<T> type) {
 		this(type, false);
