@@ -4,7 +4,7 @@
 	<artifactId>expressive</artifactId>
 	<name>expressive</name>
 	<packaging>jar</packaging>
-	<version>0.9.4</version>
+	<version>0.9.5-SNAPSHOT</version>
 	<description>
 		Expressive is designed to allow coders to write more expressive code,
  		focusing on what they want to do with collections of objects, rather than 
