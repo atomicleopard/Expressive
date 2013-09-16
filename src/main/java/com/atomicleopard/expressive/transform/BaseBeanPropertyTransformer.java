@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.SortedSet;
 
-import net.sf.cglib.core.ReflectUtils;
+import com.atomicleopard.expressive.ReflectUtil;
 
 public abstract class BaseBeanPropertyTransformer<V, K> {
 	protected String propertyName;
@@ -63,7 +63,7 @@ public abstract class BaseBeanPropertyTransformer<V, K> {
 	}
 
 	static <T> PropertyDescriptor findDescriptorForProperty(String propertyName, Class<T> clazz) {
-		PropertyDescriptor[] beanGetters = ReflectUtils.getBeanGetters(clazz);
+		PropertyDescriptor[] beanGetters = ReflectUtil.getBeanGetters(clazz);
 		for (PropertyDescriptor propertyDescriptor : beanGetters) {
 			if (propertyDescriptor.getName().equals(propertyName)) {
 				return propertyDescriptor;

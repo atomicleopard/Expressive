@@ -28,10 +28,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import net.sf.cglib.core.ReflectUtils;
-
 import com.atomicleopard.expressive.ETransformer;
 import com.atomicleopard.expressive.Expressive;
+import com.atomicleopard.expressive.ReflectUtil;
 
 /**
  * <p>
@@ -89,7 +88,7 @@ public class ComparatorBuilder<T> implements Comparator<T> {
 	private static Map<String, PropertyDescriptor> getPropertyDescriptions(Class<?> type, boolean noCache) {
 		Map<String, PropertyDescriptor> existing = noCache ? null : PropertyDescriptorCache.get(type);
 		if (existing == null) {
-			PropertyDescriptor[] getters = ReflectUtils.getBeanGetters(type);
+			PropertyDescriptor[] getters = ReflectUtil.getBeanGetters(type);
 			existing = PropertyDescriptorLookupTransformer.from(Arrays.asList(getters));
 			if (!noCache) {
 				PropertyDescriptorCache.put(type, existing);
